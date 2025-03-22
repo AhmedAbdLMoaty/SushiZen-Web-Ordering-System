@@ -1,4 +1,3 @@
-﻿# SushiZen-Web-Ordering-System
 # 🍣 SushiZen Web Ordering System
 
 This project implements the REST API backend for the SushiZen web-based ordering platform using **Spring Boot**, with API definitions driven by **OpenAPI (Swagger)**.
