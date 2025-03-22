@@ -30,27 +30,11 @@ All API endpoints for users, cart, menu, orders, admin, and kitchen staff are de
 
 ## 🚀 How to Run the Project
 
-### 1. 🧬 Generate the Spring Boot Server Code (if needed)
-
-Make sure you have Swagger Codegen installed:
-
-npm install -g @openapitools/openapi-generator-cli
+### 1. 🔨 Build the Project
 
 ```
-openapi-generator-cli generate \
-  -i sushi-zen-api.yml \
-  -g spring \
-  -o sushi-zen-backend \
-  --library spring-boot \
-  --additional-properties=interfaceOnly=true
-```
-
-
-### 2. 🔨 Build the Project
-
-```bash
-cd sushi-zen-backend
-./mvnw clean install
+mvn clean install
+mvn clean compile
 ```
 
 or, if you use Maven directly:
@@ -61,7 +45,7 @@ mvn clean install
 
 ---
 
-### 3. ▶️ Run the Server
+### 2. ▶️ Run the Server
 
 ```bash
 mvn spring-boot:run
@@ -89,11 +73,8 @@ You can use:
 ✅ All major endpoints are implemented  
 ✅ Controllers are connected to simple in-memory stores  
 ✅ Models are generated from YAML DTOs  
-✅ Ready for integration with the Angular frontend in the next lab
 
 ---
-
-## 👤 Author
 
 Course: Information Systems Modelling (ISM)  
 Lab 02 – Spring Boot API Implementation
