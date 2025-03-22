@@ -1,0 +1,434 @@
+openapi: 3.0.3
+info:
+  description: "Provides functionalities for users, menu items, cart, and order management."
+  title: SushiZen Web Ordering System APIs
+  version: 1.0.0
+servers:
+- description: Production server
+  url: https://api.sushizen.com/v1
+tags:
+- description: Operations related to user management
+  name: Users
+- description: Managing restaurant menu items
+  name: Menu
+- description: User's cart management before ordering
+  name: Cart
+- description: Placing and managing orders
+  name: Orders
+- description: "Admin functionalities for managing users, menu, and reports"
+  name: Admin
+- description: Kitchen staff operations for processing orders
+  name: Kitchen
+paths:
+  /users:
+    get:
+      operationId: getUsers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+                type: array
+          description: Successful operation
+      summary: Get all users
+      tags:
+      - Users
+      x-accepts:
+      - application/json
+  /users/register:
+    post:
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "201":
+          description: User created successfully
+      summary: Register a new user
+      tags:
+      - Users
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /users/login:
+    post:
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+          description: Successful login
+      summary: User login authentication
+      tags:
+      - Users
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /users/{userId}:
+    get:
+      operationId: getUserProfile
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+          description: User profile data
+      summary: Get a user's profile
+      tags:
+      - Users
+      x-accepts:
+      - application/json
+    put:
+      operationId: updateUserProfile
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "200":
+          description: Profile updated successfully
+      summary: Update a user's profile
+      tags:
+      - Users
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /menu:
+    get:
+      operationId: getMenuItems
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MenuItemDTO'
+                type: array
+          description: List of menu items
+      summary: Get all menu items
+      tags:
+      - Menu
+      x-accepts:
+      - application/json
+  /menu/{itemId}:
+    get:
+      operationId: getMenuItem
+      parameters:
+      - explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuItemDTO'
+          description: Menu item details
+      summary: Get details of a specific menu item
+      tags:
+      - Menu
+      x-accepts:
+      - application/json
+  /cart:
+    get:
+      operationId: getUserCart
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartDTO'
+          description: Current cart items
+      summary: Retrieve user's cart
+      tags:
+      - Cart
+      x-accepts:
+      - application/json
+    post:
+      operationId: addItemToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemDTO'
+        required: true
+      responses:
+        "201":
+          description: Item added to cart
+      summary: Add an item to the cart
+      tags:
+      - Cart
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /cart/{itemId}:
+    delete:
+      operationId: removeItemFromCart
+      parameters:
+      - explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Item removed successfully
+      summary: Remove an item from the cart
+      tags:
+      - Cart
+      x-accepts:
+      - application/json
+  /orders:
+    post:
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+        required: true
+      responses:
+        "201":
+          description: Order placed successfully
+      summary: Place an order from the cart
+      tags:
+      - Orders
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /orders/{orderId}:
+    get:
+      operationId: getOrder
+      parameters:
+      - explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDTO'
+          description: Order details
+      summary: Get order details
+      tags:
+      - Orders
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    UserDTO:
+      example:
+        phoneNumber: phoneNumber
+        role: Customer
+        name: name
+        userID: userID
+        email: email
+        password: password
+      properties:
+        userID:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        role:
+          enum:
+          - Customer
+          - Admin
+          - Kitchen_staff
+          type: string
+      required:
+      - email
+      - name
+      - password
+      - phoneNumber
+      - role
+      - userID
+      type: object
+    LoginDTO:
+      example:
+        password: password
+        email: email
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - password
+      type: object
+    MenuItemDTO:
+      example:
+        itemId: itemId
+        itemName: itemName
+        itemPicture: https://openapi-generator.tech
+        available: true
+        itemPrice: 45.5
+        itemDescription: itemDescription
+      properties:
+        itemId:
+          type: string
+        itemName:
+          type: string
+        itemDescription:
+          type: string
+        itemPrice:
+          example: 45.5
+          format: float
+          type: number
+        itemPicture:
+          format: uri
+          type: string
+        available:
+          type: boolean
+      required:
+      - available
+      - itemDescription
+      - itemId
+      - itemName
+      - itemPicture
+      - itemPrice
+      type: object
+    CartDTO:
+      example:
+        totalPrice: 45.5
+        cartId: cartId
+        userId: userId
+        items:
+        - itemId: itemId
+          quantity: 0
+          totalPrice: 6.027456183070403
+        - itemId: itemId
+          quantity: 0
+          totalPrice: 6.027456183070403
+      properties:
+        cartId:
+          type: string
+        userId:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/CartItemDTO'
+          type: array
+        totalPrice:
+          example: 45.5
+          format: float
+          type: number
+      required:
+      - cartId
+      - items
+      - totalPrice
+      - userId
+      type: object
+    CartItemDTO:
+      example:
+        itemId: itemId
+        quantity: 0
+        totalPrice: 6.027456183070403
+      properties:
+        itemId:
+          type: string
+        quantity:
+          type: integer
+        totalPrice:
+          type: number
+      required:
+      - itemId
+      - quantity
+      - totalPrice
+      type: object
+    OrderDTO:
+      example:
+        orderId: orderId
+        totalPrice: 0.8008281904610115
+        userId: userId
+        items:
+        - itemId: itemId
+          quantity: 0
+          totalPrice: 6.027456183070403
+        - itemId: itemId
+          quantity: 0
+          totalPrice: 6.027456183070403
+        paymentStatus: paid
+        status: pending
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/CartItemDTO'
+          type: array
+        status:
+          enum:
+          - pending
+          - preparing
+          - ready
+          - delivered
+          type: string
+        totalPrice:
+          type: number
+        paymentStatus:
+          enum:
+          - paid
+          - unpaid
+          - refunded
+          type: string
+      required:
+      - items
+      - orderId
+      - paymentStatus
+      - status
+      - totalPrice
+      - userId
+      type: object
+
