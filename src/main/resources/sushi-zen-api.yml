@@ -16,7 +16,7 @@ tags:
       name: Cart
     - description: Placing and managing orders
       name: Orders
-    - description: "Admin functionalities for managing users, menu, and reports"
+    - description: Admin functionalities for managing users, menu, and reports
       name: Admin
     - description: Kitchen staff operations for processing orders
       name: Kitchen
@@ -134,6 +134,27 @@ paths:
                 - Menu
             x-accepts:
                 - application/json
+        post:
+            operationId: createMenuItem
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MenuItemDTO"
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MenuItemDTO"
+                    description: Menu item created successfully
+                "400":
+                    description: Invalid input
+            summary: Add a new menu item
+            tags:
+                - Menu
+                - Admin
     /menu/{itemId}:
         get:
             operationId: getMenuItem
@@ -157,6 +178,37 @@ paths:
                 - Menu
             x-accepts:
                 - application/json
+        put:
+            operationId: updateMenuItem
+            parameters:
+                - explode: false
+                  in: path
+                  name: itemId
+                  required: true
+                  schema:
+                      type: string
+                  style: simple
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MenuItemDTO"
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MenuItemDTO"
+                    description: Menu item updated successfully
+                "404":
+                    description: Menu item not found
+                "400":
+                    description: Invalid input
+            summary: Update an existing menu item
+            tags:
+                - Menu
+                - Admin
     /cart:
         get:
             operationId: getUserCart
@@ -220,6 +272,22 @@ paths:
             summary: Place an order from the cart
             tags:
                 - Orders
+        get:
+            operationId: getAllOrders
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/OrderDTO"
+                    description: List of all orders
+            summary: Get all orders
+            tags:
+                - Orders
+            x-accepts:
+                - application/json
     /orders/{orderId}:
         get:
             operationId: getOrder

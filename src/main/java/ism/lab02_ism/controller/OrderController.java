@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 public class OrderController implements OrdersApi {
 
@@ -20,17 +24,45 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<Void> placeOrder(OrderDTO orderDTO) {
-        orderService.addOrder(orderDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        if (orderDTO.getUserId() == null || orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        try {
+            OrderDTO createdOrder = orderService.placeOrder(orderDTO);
+            if (createdOrder != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
     public ResponseEntity<OrderDTO> getOrder(String orderId) {
-        OrderDTO order = orderService.getOrder(orderId);
+        if (orderId == null || orderId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        OrderDTO order = orderService.getOrderById(orderId);
         if (order != null) {
             return ResponseEntity.ok(order);
-        } else {
-            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        try {
+            Map<String, OrderDTO> ordersMap = orderService.getAllOrders();
+            if (ordersMap != null && !ordersMap.isEmpty()) {
+                List<OrderDTO> orders = new ArrayList<>(ordersMap.values());
+                return ResponseEntity.ok(orders);
+            }
+            return ResponseEntity.ok(new ArrayList<>()); // Return empty list instead of 404
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

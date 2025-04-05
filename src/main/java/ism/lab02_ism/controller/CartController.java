@@ -3,91 +3,79 @@ package ism.lab02_ism.controller;
 import ism.lab02_ism.api.CartApi;
 import ism.lab02_ism.model.CartDTO;
 import ism.lab02_ism.model.CartItemDTO;
+import ism.lab02_ism.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class CartController implements CartApi {
 
-    private final Map<String, CartDTO> carts = new HashMap<>();
+    private final CartService cartService;
+
+    @Autowired
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
 
     @Override
     public ResponseEntity<CartDTO> getUserCart() {
-        
+
         String userId = "1";
-        CartDTO cart = carts.computeIfAbsent(userId, this::createNewCart);
-        return ResponseEntity.ok(cart);
+
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        CartDTO cart = cartService.getUserCart(userId);
+        if (cart != null) {
+            return ResponseEntity.ok(cart);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @Override
     public ResponseEntity<Void> addItemToCart(CartItemDTO cartItemDTO) {
-        String userId = "1"; 
-        CartDTO cart = carts.computeIfAbsent(userId, this::createNewCart);
-        
-        
-        boolean found = false;
-        for (CartItemDTO item : cart.getItems()) {
-            if (item.getItemId().equals(cartItemDTO.getItemId())) {
-                
-                item.setQuantity(item.getQuantity() + cartItemDTO.getQuantity());
-                
-                BigDecimal unitPrice = new BigDecimal("10.00");
-                BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
-                item.setTotalPrice(unitPrice.multiply(quantity));
-                
-                found = true;
-                break;
-            }
+
+        String userId = "1";
+
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        if (!found) {
-            cart.getItems().add(cartItemDTO);
+
+        if (cartItemDTO.getItemId() == null || cartItemDTO.getQuantity() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        
-        
-        updateCartTotal(cart);
-        
-        return ResponseEntity.status(201).build();
+
+        if (cartItemDTO.getQuantity() <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        boolean success = cartService.addItemToCart(userId, cartItemDTO);
+        if (success) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @Override
     public ResponseEntity<Void> removeItemFromCart(String itemId) {
-        String userId = "1"; 
-        CartDTO cart = carts.get(userId);
-        if (cart == null) {
-            return ResponseEntity.notFound().build();
+
+        String userId = "1";
+
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        
-        cart.getItems().removeIf(item -> item.getItemId().equals(itemId));
-        
-        
-        updateCartTotal(cart);
-        
-        return ResponseEntity.ok().build();
-    }
-    
-    private CartDTO createNewCart(String userId) {
-        CartDTO cart = new CartDTO();
-        cart.setCartId(UUID.randomUUID().toString());
-        cart.setUserId(userId);
-        cart.setItems(new ArrayList<>());
-        cart.setTotalPrice(0.0f); 
-        return cart;
-    }
-    
-    private void updateCartTotal(CartDTO cart) {
-        BigDecimal total = BigDecimal.ZERO;
-        for (CartItemDTO item : cart.getItems()) {
-            
-            total = total.add(item.getTotalPrice());
+
+        if (itemId == null || itemId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        cart.setTotalPrice(total.floatValue()); 
+
+        boolean success = cartService.removeItemFromCart(userId, itemId);
+        if (success) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
