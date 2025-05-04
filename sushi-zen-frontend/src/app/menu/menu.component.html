@@ -1,0 +1,49 @@
+<div class="menu-container">
+  <h1>Our Menu</h1>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Loading menu items...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <p>Sorry, we couldn't load the menu. Please try again later.</p>
+    <button mat-raised-button color="primary" (click)="loadMenuItems()">
+      Retry
+    </button>
+  </div>
+
+  <div class="menu-items" *ngIf="!loading && !error">
+    <mat-card *ngFor="let item of menuItems" class="menu-item">
+      <div class="item-image" *ngIf="item.itemPicture">
+        <img [src]="item.itemPicture" [alt]="item.itemName" />
+      </div>
+      <div class="item-info">
+        <mat-card-header>
+          <mat-card-title>{{ item.itemName }}</mat-card-title>
+          <mat-card-subtitle *ngIf="item.available" class="available"
+            >Available</mat-card-subtitle
+          >
+          <mat-card-subtitle *ngIf="!item.available" class="unavailable"
+            >Unavailable</mat-card-subtitle
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <p class="item-description">{{ item.itemDescription }}</p>
+          <p class="item-price">{{ item.itemPrice | currency }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="addToCart(item)"
+            [disabled]="!item.available"
+          >
+            <mat-icon>add_shopping_cart</mat-icon> Add to Cart
+          </button>
+        </mat-card-actions>
+      </div>
+    </mat-card>
+  </div>
+</div>

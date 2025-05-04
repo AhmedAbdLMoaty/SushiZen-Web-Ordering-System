@@ -32,7 +32,13 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/UserDTO"
                                 type: array
-                    description: Successful operation
+                    description: Successfully retrieved users list
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Insufficient permissions
+                "500":
+                    description: Internal server error
             summary: Get all users
             tags:
                 - Users
@@ -50,6 +56,12 @@ paths:
             responses:
                 "201":
                     description: User created successfully
+                "400":
+                    description: Bad request - Invalid input data
+                "409":
+                    description: Conflict - Username or email already exists
+                "500":
+                    description: Internal server error
             summary: Register a new user
             tags:
                 - Users
@@ -69,6 +81,12 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/UserDTO"
                     description: Successful login
+                "400":
+                    description: Bad request - Invalid credentials format
+                "401":
+                    description: Unauthorized - Invalid credentials
+                "500":
+                    description: Internal server error
             summary: User login authentication
             tags:
                 - Users
@@ -90,6 +108,14 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/UserDTO"
                     description: User profile data
+                "400":
+                    description: Bad request - Invalid user ID
+                "401":
+                    description: Unauthorized - Authentication required
+                "404":
+                    description: Not found - User doesn't exist
+                "500":
+                    description: Internal server error
             summary: Get a user's profile
             tags:
                 - Users
@@ -114,6 +140,16 @@ paths:
             responses:
                 "200":
                     description: Profile updated successfully
+                "400":
+                    description: Bad request - Invalid input data
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Insufficient permissions
+                "404":
+                    description: Not found - User doesn't exist
+                "500":
+                    description: Internal server error
             summary: Update a user's profile
             tags:
                 - Users
@@ -128,7 +164,9 @@ paths:
                                 items:
                                     $ref: "#/components/schemas/MenuItemDTO"
                                 type: array
-                    description: List of menu items
+                    description: Successfully retrieved menu items
+                "500":
+                    description: Internal server error
             summary: Get all menu items
             tags:
                 - Menu
@@ -150,7 +188,13 @@ paths:
                                 $ref: "#/components/schemas/MenuItemDTO"
                     description: Menu item created successfully
                 "400":
-                    description: Invalid input
+                    description: Bad request - Invalid input data
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Admin access required
+                "500":
+                    description: Internal server error
             summary: Add a new menu item
             tags:
                 - Menu
@@ -172,7 +216,13 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/MenuItemDTO"
-                    description: Menu item details
+                    description: Successfully retrieved menu item
+                "400":
+                    description: Bad request - Invalid item ID
+                "404":
+                    description: Not found - Menu item doesn't exist
+                "500":
+                    description: Internal server error
             summary: Get details of a specific menu item
             tags:
                 - Menu
@@ -201,10 +251,16 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/MenuItemDTO"
                     description: Menu item updated successfully
-                "404":
-                    description: Menu item not found
                 "400":
-                    description: Invalid input
+                    description: Bad request - Invalid input data
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Admin access required
+                "404":
+                    description: Not found - Menu item doesn't exist
+                "500":
+                    description: Internal server error
             summary: Update an existing menu item
             tags:
                 - Menu
@@ -218,7 +274,13 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/CartDTO"
-                    description: Current cart items
+                    description: Successfully retrieved cart
+                "401":
+                    description: Unauthorized - Authentication required
+                "404":
+                    description: Not found - Cart doesn't exist
+                "500":
+                    description: Internal server error
             summary: Retrieve user's cart
             tags:
                 - Cart
@@ -234,7 +296,15 @@ paths:
                 required: true
             responses:
                 "201":
-                    description: Item added to cart
+                    description: Item added to cart successfully
+                "400":
+                    description: Bad request - Invalid input data
+                "401":
+                    description: Unauthorized - Authentication required
+                "404":
+                    description: Not found - Menu item doesn't exist
+                "500":
+                    description: Internal server error
             summary: Add an item to the cart
             tags:
                 - Cart
@@ -250,8 +320,16 @@ paths:
                       type: string
                   style: simple
             responses:
-                "200":
-                    description: Item removed successfully
+                "204":
+                    description: Item removed successfully (No Content)
+                "400":
+                    description: Bad request - Invalid item ID
+                "401":
+                    description: Unauthorized - Authentication required
+                "404":
+                    description: Not found - Item not in cart
+                "500":
+                    description: Internal server error
             summary: Remove an item from the cart
             tags:
                 - Cart
@@ -269,6 +347,16 @@ paths:
             responses:
                 "201":
                     description: Order placed successfully
+                "400":
+                    description: Bad request - Invalid input data
+                "401":
+                    description: Unauthorized - Authentication required
+                "404":
+                    description: Not found - Referenced items don't exist
+                "422":
+                    description: Unprocessable Entity - Cart empty or payment failed
+                "500":
+                    description: Internal server error
             summary: Place an order from the cart
             tags:
                 - Orders
@@ -282,7 +370,13 @@ paths:
                                 type: array
                                 items:
                                     $ref: "#/components/schemas/OrderDTO"
-                    description: List of all orders
+                    description: Successfully retrieved all orders
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Insufficient permissions
+                "500":
+                    description: Internal server error
             summary: Get all orders
             tags:
                 - Orders
@@ -305,7 +399,17 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/OrderDTO"
-                    description: Order details
+                    description: Successfully retrieved order details
+                "400":
+                    description: Bad request - Invalid order ID
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Not the order owner
+                "404":
+                    description: Not found - Order doesn't exist
+                "500":
+                    description: Internal server error
             summary: Get order details
             tags:
                 - Orders
@@ -331,7 +435,17 @@ paths:
                             $ref: "#/components/schemas/OrderStatusDTO"
             responses:
                 "200":
-                    description: Order status updated
+                    description: Order status updated successfully
+                "400":
+                    description: Bad request - Invalid input data or status
+                "401":
+                    description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Kitchen staff access required
+                "404":
+                    description: Not found - Order doesn't exist
+                "500":
+                    description: Internal server error
 components:
     schemas:
         UserDTO:

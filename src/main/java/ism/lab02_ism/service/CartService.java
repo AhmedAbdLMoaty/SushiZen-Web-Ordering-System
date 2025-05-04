@@ -165,7 +165,6 @@ public class CartService {
         CartItemDTO dto = new CartItemDTO();
         dto.setItemId(cartItem.getMenuItem().getItemId());
         dto.setQuantity(cartItem.getQuantity());
-
         dto.setTotalPrice(new java.math.BigDecimal(Float.toString(cartItem.getTotalPrice())));
         return dto;
     }

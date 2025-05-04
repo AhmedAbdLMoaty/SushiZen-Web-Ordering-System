@@ -33,7 +33,7 @@ public class UserService {
     @Transactional
     public UserDTO registerUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new RuntimeException("Email already registered");
+            return null; // Email already exists
         }
 
         User user = convertToEntity(userDTO);
@@ -94,6 +94,7 @@ public class UserService {
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
+        // Don't expose the password in DTO responses
         dto.setPassword(user.getPassword());
 
         if (user.getRole() != null) {
@@ -133,6 +134,9 @@ public class UserService {
                     user.setRole(User.UserRole.KITCHEN_STAFF);
                     break;
             }
+        } else {
+            // Default role
+            user.setRole(User.UserRole.CUSTOMER);
         }
 
         return user;

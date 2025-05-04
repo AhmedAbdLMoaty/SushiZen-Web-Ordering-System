@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders") // Using "orders" instead of "order" as "order" is a SQL keyword
 public class Order {
 
     @Id
@@ -19,7 +19,7 @@ public class Order {
     private String orderId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -105,7 +105,7 @@ public class Order {
     }
 
     public enum OrderStatus {
-        PENDING, PREPARING, READY, DELIVERED
+        PENDING, PREPARING, READY, DELIVERED, CANCELLED // Add this status
     }
 
     public enum PaymentStatus {

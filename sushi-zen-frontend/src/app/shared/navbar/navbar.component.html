@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <span class="logo" routerLink="/">Sushi Zen</span>
+
+  <span class="spacer"></span>
+
+  <div class="nav-links">
+    <a mat-button routerLink="/">Home</a>
+    <a mat-button routerLink="/menu">Menu</a>
+
+    <ng-container *ngIf="authService.isLoggedIn(); else notLoggedIn">
+      <a
+        mat-button
+        [matBadge]="cartItemCount"
+        matBadgeColor="accent"
+        routerLink="/cart"
+      >
+        <mat-icon>shopping_cart</mat-icon> Cart
+      </a>
+      <a mat-button (click)="logout()">Logout</a>
+    </ng-container>
+
+    <ng-template #notLoggedIn>
+      <a mat-button routerLink="/login">Login</a>
+      <a mat-button routerLink="/register">Register</a>
+    </ng-template>
+
+    <a mat-button *ngIf="authService.isAdmin()" routerLink="/admin">Admin</a>
+  </div>
+</mat-toolbar>

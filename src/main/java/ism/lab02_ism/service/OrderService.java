@@ -1,14 +1,25 @@
 package ism.lab02_ism.service;
 
-import ism.lab02_ism.entity.*;
+import ism.lab02_ism.entity.Cart;
+import ism.lab02_ism.entity.MenuItem;
+import ism.lab02_ism.entity.Order;
+import ism.lab02_ism.entity.OrderItem;
+import ism.lab02_ism.entity.User;
 import ism.lab02_ism.model.CartItemDTO;
 import ism.lab02_ism.model.OrderDTO;
-import ism.lab02_ism.repository.*;
+import ism.lab02_ism.repository.CartItemRepository;
+import ism.lab02_ism.repository.CartRepository;
+import ism.lab02_ism.repository.MenuItemRepository;
+import ism.lab02_ism.repository.OrderItemRepository;
+import ism.lab02_ism.repository.OrderRepository;
+import ism.lab02_ism.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,7 +64,7 @@ public class OrderService {
 
             order = orderRepository.save(order);
 
-            java.math.BigDecimal totalPrice = java.math.BigDecimal.ZERO;
+            float totalPrice = 0;
 
             for (CartItemDTO itemDTO : orderDTO.getItems()) {
                 Optional<MenuItem> menuItemOptional = menuItemRepository.findByItemId(itemDTO.getItemId());
@@ -66,22 +77,23 @@ public class OrderService {
                     orderItem.setMenuItem(menuItem);
                     orderItem.setQuantity(itemDTO.getQuantity());
 
-                    java.math.BigDecimal itemTotalPrice = new java.math.BigDecimal(
-                            Float.toString(menuItem.getItemPrice() * itemDTO.getQuantity()));
-                    orderItem.setTotalPrice(itemTotalPrice);
+                    float itemTotal = menuItem.getItemPrice() * itemDTO.getQuantity();
+                    orderItem.setTotalPrice(java.math.BigDecimal.valueOf(itemTotal));
 
                     orderItemRepository.save(orderItem);
-                    order.getItems().add(orderItem);
 
-                    totalPrice = totalPrice.add(orderItem.getTotalPrice());
+                    totalPrice += itemTotal;
                 }
             }
 
-            order.setTotalPrice(totalPrice.floatValue());
+            order.setTotalPrice(totalPrice);
+            orderRepository.save(order);
 
+            // Clear the user's cart
             Optional<Cart> cartOptional = cartRepository.findByUser(user);
             if (cartOptional.isPresent()) {
                 Cart cart = cartOptional.get();
+                cartItemRepository.deleteAll(cart.getItems());
                 cart.getItems().clear();
                 cart.setTotalPrice(0);
                 cartRepository.save(cart);
@@ -101,8 +113,15 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Map<String, OrderDTO> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .collect(Collectors.toMap(Order::getOrderId, this::convertToDTO));
+        List<Order> orders = orderRepository.findAll();
+        Map<String, OrderDTO> orderDTOs = new HashMap<>();
+
+        for (Order order : orders) {
+            OrderDTO dto = convertToDTO(order);
+            orderDTOs.put(dto.getOrderId(), dto);
+        }
+
+        return orderDTOs;
     }
 
     @Transactional
@@ -112,25 +131,21 @@ public class OrderService {
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
 
-            Order.OrderStatus newStatus;
             switch (statusEnum) {
                 case PENDING:
-                    newStatus = Order.OrderStatus.PENDING;
+                    order.setStatus(Order.OrderStatus.PENDING);
                     break;
                 case PREPARING:
-                    newStatus = Order.OrderStatus.PREPARING;
+                    order.setStatus(Order.OrderStatus.PREPARING);
                     break;
                 case READY:
-                    newStatus = Order.OrderStatus.READY;
+                    order.setStatus(Order.OrderStatus.READY);
                     break;
                 case DELIVERED:
-                    newStatus = Order.OrderStatus.DELIVERED;
+                    order.setStatus(Order.OrderStatus.DELIVERED);
                     break;
-                default:
-                    throw new IllegalArgumentException("Unknown order status: " + statusEnum);
             }
 
-            order.setStatus(newStatus);
             orderRepository.save(order);
             return true;
         }
@@ -142,7 +157,6 @@ public class OrderService {
         OrderDTO dto = new OrderDTO();
         dto.setOrderId(order.getOrderId());
         dto.setUserId(order.getUser().getUserId());
-        dto.setTotalPrice(order.getTotalPrice());
 
         switch (order.getStatus()) {
             case PENDING:
@@ -171,21 +185,19 @@ public class OrderService {
                 break;
         }
 
-        List<CartItemDTO> itemDTOs = order.getItems().stream()
-                .map(this::convertToCartItemDTO)
-                .collect(Collectors.toList());
+        dto.setTotalPrice(order.getTotalPrice());
 
-        dto.setItems(itemDTOs);
+        List<CartItemDTO> items = new ArrayList<>();
+        for (OrderItem orderItem : order.getItems()) {
+            CartItemDTO itemDTO = new CartItemDTO();
+            itemDTO.setItemId(orderItem.getMenuItem().getItemId());
+            itemDTO.setQuantity(orderItem.getQuantity());
+            itemDTO.setTotalPrice(orderItem.getTotalPrice());
+            items.add(itemDTO);
+        }
 
-        return dto;
-    }
+        dto.setItems(items);
 
-    private CartItemDTO convertToCartItemDTO(OrderItem orderItem) {
-        CartItemDTO dto = new CartItemDTO();
-        dto.setItemId(orderItem.getMenuItem().getItemId());
-        dto.setQuantity(orderItem.getQuantity());
-
-        dto.setTotalPrice(orderItem.getTotalPrice());
         return dto;
     }
 }
