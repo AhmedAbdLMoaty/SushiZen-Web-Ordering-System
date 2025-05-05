@@ -7,7 +7,7 @@ import ism.lab02_ism.entity.User;
 import ism.lab02_ism.model.CartDTO;
 import ism.lab02_ism.model.CartItemDTO;
 import ism.lab02_ism.repository.CartItemRepository;
-import ism.lab02_ism.repository.CartRepository;
+import ism.lab02_ism.repository.CartRepository; // Make sure this import is correct
 import ism.lab02_ism.repository.MenuItemRepository;
 import ism.lab02_ism.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,16 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    private final CartRepository cartRepository;
+    private final ism.lab02_ism.repository.CartRepository cartRepository; // Use fully qualified name
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final MenuItemRepository menuItemRepository;
 
     @Autowired
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository,
-            UserRepository userRepository, MenuItemRepository menuItemRepository) {
+    public CartService(ism.lab02_ism.repository.CartRepository cartRepository, // Use fully qualified name
+            CartItemRepository cartItemRepository,
+            UserRepository userRepository,
+            MenuItemRepository menuItemRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
@@ -133,6 +135,42 @@ public class CartService {
 
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Clears all items from a user's cart without deleting the cart itself.
+     *
+     * @param userId The user ID whose cart should be cleared
+     * @return true if the cart was successfully cleared, false otherwise
+     */
+    @Transactional
+    public boolean clearCart(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Optional<Cart> cartOptional = cartRepository.findByUser(user);
+
+            if (cartOptional.isPresent()) {
+                Cart cart = cartOptional.get();
+
+                // Delete all cart items from the database
+                cartItemRepository.deleteAll(cart.getItems());
+
+                // Clear the items collection
+                cart.getItems().clear();
+
+                // Reset the total price
+                cart.setTotalPrice(0);
+
+                // Save the updated cart
+                cartRepository.save(cart);
+
+                return true;
             }
         }
 

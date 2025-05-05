@@ -1,0 +1,671 @@
+// Modern Japanese-inspired Home Page
+
+.home-container {
+  overflow-x: hidden;
+  position: relative;
+  background-color: var(--rice);
+}
+
+// HERO SECTION
+.hero-section {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  // Hero Background with proper path handling
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../assets/images/hero-sushi.jpg");
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.05);
+    animation: subtle-zoom 20s infinite alternate ease-in-out;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.8) 30%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    width: 100%;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+
+    .hero-text {
+      max-width: 600px;
+      color: white;
+      animation: fade-in-up 0.8s ease-out;
+
+      .hero-logo {
+        margin-bottom: 1.5rem;
+
+        .japanese-text {
+          display: block;
+          font-family: var(--font-jp);
+          font-size: 2rem;
+          font-weight: 500;
+          opacity: 0.9;
+          margin-bottom: 0.5rem;
+        }
+
+        h1 {
+          font-size: 4.5rem;
+          font-weight: 700;
+          margin: 0;
+          line-height: 1;
+          background: linear-gradient(
+            90deg,
+            var(--primary) 0%,
+            var(--accent) 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+          letter-spacing: 2px;
+        }
+      }
+
+      .tagline {
+        font-size: 1.5rem;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+
+        button {
+          padding: 0.75rem 1.5rem;
+          font-size: 1rem;
+
+          &:first-child {
+            background: var(--primary);
+
+            &:hover {
+              background: var(--primary-dark);
+              transform: translateY(-3px);
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+          }
+
+          &:last-child {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.1);
+              transform: translateY(-3px);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Common Section Styling
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+    font-family: var(--font-heading);
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  &.light {
+    h2,
+    .subtitle {
+      color: white;
+    }
+  }
+}
+
+.jp-divider {
+  position: relative;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  width: 120px;
+  margin: 1rem auto;
+}
+
+// FEATURED MENU ITEMS SECTION
+.featured-section {
+  padding: 5rem 0;
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .featured-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+
+      .featured-image img {
+        transform: scale(1.08);
+      }
+    }
+
+    .featured-image {
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .featured-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-family: var(--font-jp);
+        font-weight: 500;
+        font-size: 0.8rem;
+      }
+    }
+
+    .featured-content {
+      padding: 1.5rem;
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: var(--secondary);
+        font-weight: 600;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      button {
+        color: var(--primary);
+        font-weight: 600;
+
+        mat-icon {
+          transition: transform 0.3s ease;
+          font-size: 18px;
+          height: 18px;
+          width: 18px;
+          margin-left: 0.25rem;
+        }
+
+        &:hover mat-icon {
+          transform: translateX(5px);
+        }
+      }
+    }
+  }
+}
+
+// STORY SECTION WITH PARALLAX
+.story-section {
+  position: relative;
+  padding: 6rem 0;
+  color: white;
+  overflow: hidden;
+
+  .parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 150%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    transform: translateZ(0);
+    z-index: -2;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(26, 38, 57, 0.95),
+        rgba(26, 38, 57, 0.8)
+      );
+      z-index: -1;
+    }
+  }
+
+  .story-content {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+
+    .story-text {
+      .japanese-accent {
+        font-family: var(--font-jp);
+        font-size: 1rem;
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -0.5rem;
+          width: 60px;
+          height: 3px;
+          background: var(--primary);
+        }
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        max-width: 90%;
+      }
+
+      button {
+        margin-top: 1rem;
+        border: 2px solid white;
+        color: white;
+        padding: 0.5rem 2rem;
+        font-weight: 500;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .story-image {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 100%;
+        height: 100%;
+        border: 3px solid var(--primary);
+        border-radius: 12px;
+        z-index: 1;
+      }
+
+      img {
+        width: 100%;
+        border-radius: 12px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
+
+// BENEFITS SECTION
+.benefits-section {
+  padding: 5rem 0;
+  background-color: var(--rice);
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+
+  .benefit-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+
+      .benefit-icon {
+        background: var(--primary);
+        color: white;
+        transform: rotateY(180deg);
+      }
+    }
+
+    .benefit-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(233, 79, 55, 0.1);
+      border-radius: 50%;
+      transition: all 0.5s ease;
+
+      mat-icon {
+        font-size: 2rem;
+        height: 2rem;
+        width: 2rem;
+        color: var(--primary);
+        transition: all 0.5s ease;
+      }
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+  }
+}
+
+// TESTIMONIAL SECTION
+.testimonial-section {
+  padding: 5rem 0;
+  background-color: var(--secondary);
+  color: white;
+
+  .testimonial-slider {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 1rem 0.5rem 2rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .testimonial-card {
+    flex: 0 0 350px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+
+    .quote-icon {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      opacity: 0.2;
+      line-height: 0;
+    }
+
+    .testimonial-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+
+      .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 1rem;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .author-info {
+        h4 {
+          margin: 0 0 0.25rem;
+          font-size: 1.1rem;
+          color: white;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.9rem;
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}
+
+// CALL TO ACTION
+.cta-section {
+  padding: 5rem 0;
+  background: linear-gradient(to right, var(--primary), #f06449);
+  color: white;
+
+  .cta-content {
+    text-align: center;
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      button {
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+
+        &:first-child {
+          background: white;
+          color: var(--primary);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        &:last-child {
+          background: transparent;
+          border: 2px solid white;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+          }
+        }
+      }
+    }
+  }
+}
+
+// ANIMATIONS
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// RESPONSIVE DESIGN
+@media (max-width: 992px) {
+  .story-content {
+    grid-template-columns: 1fr !important;
+    gap: 3rem !important;
+  }
+
+  .hero-section .hero-content .hero-text .hero-logo h1 {
+    font-size: 3.5rem;
+  }
+
+  .cta-section .cta-buttons {
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .section-header h2,
+  .story-section .story-content .story-text h2,
+  .cta-section .cta-content h2 {
+    font-size: 2rem;
+  }
+
+  .hero-section {
+    .hero-overlay {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6));
+    }
+
+    .hero-content .hero-text {
+      text-align: center;
+      margin: 0 auto;
+
+      .cta-buttons {
+        justify-content: center;
+      }
+    }
+  }
+
+  .featured-grid,
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    min-height: 500px;
+
+    .hero-content .hero-text {
+      .hero-logo {
+        .japanese-text {
+          font-size: 1.5rem;
+        }
+
+        h1 {
+          font-size: 2.8rem;
+        }
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+}

@@ -24,6 +24,7 @@ import { CartService } from '../../services/cart.service';
 })
 export class NavbarComponent implements OnInit {
   cartItemCount = 0;
+  isMobileMenuOpen = false;
 
   constructor(
     public authService: AuthService,
@@ -38,5 +39,9 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 }

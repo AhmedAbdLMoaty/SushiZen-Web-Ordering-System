@@ -1,29 +1,83 @@
-<mat-toolbar color="primary">
-  <span class="logo" routerLink="/">Sushi Zen</span>
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand" routerLink="/">
+      <div class="logo-wrapper">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path
+            d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16Z"
+          />
+        </svg>
+        <span class="logo-text">Sushi Zen</span>
+      </div>
+    </div>
 
-  <span class="spacer"></span>
-
-  <div class="nav-links">
-    <a mat-button routerLink="/">Home</a>
-    <a mat-button routerLink="/menu">Menu</a>
-
-    <ng-container *ngIf="authService.isLoggedIn(); else notLoggedIn">
+    <div class="nav-links">
       <a
-        mat-button
-        [matBadge]="cartItemCount"
-        matBadgeColor="accent"
-        routerLink="/cart"
+        class="nav-link"
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
       >
-        <mat-icon>shopping_cart</mat-icon> Cart
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
       </a>
-      <a mat-button (click)="logout()">Logout</a>
-    </ng-container>
+      <a class="nav-link" routerLink="/menu" routerLinkActive="active">
+        <mat-icon>restaurant_menu</mat-icon>
+        <span>Menu</span>
+      </a>
 
-    <ng-template #notLoggedIn>
-      <a mat-button routerLink="/login">Login</a>
-      <a mat-button routerLink="/register">Register</a>
-    </ng-template>
+      <ng-container *ngIf="authService.isLoggedIn(); else notLoggedIn">
+        <a
+          class="nav-link cart-link"
+          routerLink="/cart"
+          routerLinkActive="active"
+        >
+          <div class="cart-icon-wrapper">
+            <mat-icon>shopping_cart</mat-icon>
+            <span *ngIf="cartItemCount > 0" class="cart-badge">{{
+              cartItemCount
+            }}</span>
+          </div>
+          <span>Cart</span>
+        </a>
+        <button class="nav-link logout-button" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
+      </ng-container>
 
-    <a mat-button *ngIf="authService.isAdmin()" routerLink="/admin">Admin</a>
+      <ng-template #notLoggedIn>
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </a>
+        <a
+          class="nav-link highlight"
+          routerLink="/register"
+          routerLinkActive="active"
+        >
+          <mat-icon>person_add</mat-icon>
+          <span>Register</span>
+        </a>
+      </ng-template>
+
+      <a
+        class="nav-link admin-link"
+        *ngIf="authService.isAdmin()"
+        routerLink="/admin"
+        routerLinkActive="active"
+      >
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Admin</span>
+      </a>
+    </div>
+
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <mat-icon>{{ isMobileMenuOpen ? "close" : "menu" }}</mat-icon>
+    </button>
   </div>
-</mat-toolbar>
+</nav>
+
+<div class="mobile-menu" [class.open]="isMobileMenuOpen">
+  <!-- Mobile menu links (same as above but styled for mobile) -->
+</div>

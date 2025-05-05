@@ -82,4 +82,12 @@ export class CartService {
       })
     );
   }
+
+  clearCart(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/clear`).pipe(
+      tap(() => {
+        this.cartItemsSubject.next(0);
+      })
+    );
+  }
 }

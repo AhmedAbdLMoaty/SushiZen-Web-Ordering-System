@@ -18,6 +18,221 @@
   }
 }
 
+.navbar {
+  background-color: var(--paper);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+
+  &.hide {
+    transform: translateY(-100%);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        fill: var(--primary);
+        margin-right: 8px;
+        animation: pulse 2s infinite;
+      }
+
+      .logo-text {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--secondary);
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--primary);
+          transform: scaleX(0);
+          transform-origin: bottom right;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover::after {
+          transform: scaleX(1);
+          transform-origin: bottom left;
+        }
+      }
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .nav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+
+      mat-icon {
+        margin-bottom: 4px;
+      }
+
+      span {
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      &:hover {
+        color: var(--primary);
+        background-color: rgba(233, 79, 55, 0.05);
+      }
+
+      &.active {
+        color: var(--primary);
+        font-weight: 600;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 3px;
+          background-color: var(--primary);
+          border-radius: 2px;
+        }
+      }
+
+      &.highlight {
+        background-color: var(--primary);
+        color: white;
+
+        &:hover {
+          background-color: var(--primary-dark);
+          transform: translateY(-2px);
+        }
+      }
+
+      &.logout-button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-family: var(--font-body);
+      }
+    }
+
+    .cart-link {
+      position: relative;
+
+      .cart-icon-wrapper {
+        position: relative;
+
+        .cart-badge {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background-color: var(--primary);
+          color: white;
+          font-size: 0.75rem;
+          font-weight: 600;
+          min-width: 16px;
+          height: 16px;
+          border-radius: var(--radius-circle);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2px;
+        }
+      }
+    }
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--secondary);
+    cursor: pointer;
+
+    mat-icon {
+      font-size: 2rem;
+    }
+  }
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-md);
+  padding: 1rem;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  z-index: 99;
+
+  &.open {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar .nav-links {
+    display: none;
+  }
+
+  .navbar .mobile-menu-toggle {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+}
+
 @media (max-width: 600px) {
   .logo {
     font-size: 1.2rem;

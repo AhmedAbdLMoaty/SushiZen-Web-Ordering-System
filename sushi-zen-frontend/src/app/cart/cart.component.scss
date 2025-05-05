@@ -1,0 +1,442 @@
+.cart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  background-image: url("/assets/images/sushi-pattern.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-lg);
+  padding: 4rem 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(44, 62, 80, 0.7) 100%
+    );
+    z-index: 1;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      animation: fudeIn 0.7s ease;
+      position: relative;
+      font-family: var(--font-heading);
+
+      &::after {
+        content: "買い物カゴ";
+        position: absolute;
+        top: -20px;
+        right: -60px;
+        font-family: var(--font-jp);
+        font-size: 1.2rem;
+        opacity: 0.8;
+        transform: rotate(10deg);
+      }
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.9;
+      animation: fudeIn 0.7s ease 0.2s both;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+
+  .bento-loader {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+
+    .bento-box {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-color: #f4f0e6;
+      border: 2px solid #e0d9c8;
+      border-radius: 8px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4px;
+      padding: 8px;
+      animation: pulse 1.5s infinite alternate;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      /* Add wooden texture */
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23a67c52' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+        border-radius: 6px;
+        pointer-events: none;
+      }
+
+      .bento-item {
+        background-color: var(--primary);
+        border-radius: 4px;
+        animation: colorChange 3s infinite alternate;
+        position: relative;
+        overflow: hidden;
+
+        /* Add food-like texture to each bento item */
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+          pointer-events: none;
+        }
+
+        &:nth-child(1) {
+          animation-delay: 0s;
+          background-color: #e94f37; /* Tuna/salmon */
+        }
+
+        &:nth-child(2) {
+          animation-delay: 0.5s;
+          background-color: #f0c05a; /* Tamago */
+        }
+
+        &:nth-child(3) {
+          animation-delay: 1s;
+          background-color: #4ecdc4; /* Wasabi */
+        }
+
+        &:nth-child(4) {
+          animation-delay: 1.5s;
+          background-color: #1f363d; /* Nori */
+        }
+      }
+    }
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.cart-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cart-item {
+  display: flex;
+  background-color: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  animation: fudeIn 0.5s ease both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 4px solid var(--primary);
+  position: relative;
+
+  /* Add Japanese food texture background */
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--primary), var(--accent));
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .item-image {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+
+    /* Custom wooden plate styling */
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(
+        90deg,
+        rgba(166, 124, 82, 0.7) 0%,
+        rgba(128, 96, 64, 0.7) 25%,
+        rgba(166, 124, 82, 0.7) 50%,
+        rgba(128, 96, 64, 0.7) 75%,
+        rgba(166, 124, 82, 0.7) 100%
+      );
+      opacity: 0.5;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+
+  .item-details {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.3rem;
+      color: var(--secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 8px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 2px;
+      }
+    }
+
+    .item-description {
+      margin: 0 0 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .item-controls {
+      display: flex;
+      align-items: center;
+      margin-top: auto;
+
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #eee;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        position: relative;
+
+        /* Add rice paper texture */
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+          background-position: center;
+          pointer-events: none;
+          opacity: 0.4;
+        }
+
+        button {
+          background: none;
+          border: none;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          z-index: 1;
+
+          &:hover {
+            background-color: rgba(233, 79, 55, 0.1);
+          }
+
+          mat-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+          }
+        }
+
+        span {
+          width: 40px;
+          text-align: center;
+          font-weight: 600;
+          position: relative;
+          z-index: 1;
+        }
+      }
+
+      .item-price {
+        margin-left: auto;
+        margin-right: 1rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--secondary);
+        font-family: var(--font-heading);
+      }
+
+      .remove-button {
+        background: none;
+        border: none;
+        color: var(--error);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+
+        /* Add Japanese calligraphy-inspired ink splash effect */
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--error);
+          opacity: 0;
+          transform: scale(0);
+          transition: all 0.3s ease;
+          border-radius: 50%;
+          z-index: -1;
+        }
+
+        &:hover {
+          transform: rotate(90deg);
+
+          &::before {
+            opacity: 0.1;
+            transform: scale(1);
+          }
+
+          mat-icon {
+            color: var(--error-dark);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+
+    .item-image {
+      width: 100%;
+      height: 180px;
+    }
+  }
+
+  .page-header .header-content h1 {
+    font-size: 2.5rem;
+
+    &::after {
+      font-size: 1rem;
+      top: -15px;
+      right: -40px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    padding: 2.5rem 1rem;
+
+    .header-content h1 {
+      font-size: 2rem;
+    }
+  }
+}

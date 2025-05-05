@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +15,7 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -24,6 +26,9 @@ import { AuthService } from '../services/auth.service';
 })
 export class MenuComponent implements OnInit {
   menuItems: any[] = [];
+  filteredItems: any[] = [];
+  searchQuery: string = '';
+  activeCategory: string = 'all';
   loading = true;
   error = false;
 
@@ -43,6 +48,7 @@ export class MenuComponent implements OnInit {
     this.menuService.getAllMenuItems().subscribe({
       next: (items) => {
         this.menuItems = items;
+        this.filteredItems = [...items];
         this.loading = false;
       },
       error: (err) => {
@@ -51,6 +57,56 @@ export class MenuComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  filterItems(): void {
+    if (!this.searchQuery.trim()) {
+      this.filterByCategory(this.activeCategory);
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    let filtered = this.menuItems.filter(
+      (item) =>
+        item.itemName.toLowerCase().includes(query) ||
+        item.itemDescription.toLowerCase().includes(query)
+    );
+
+    if (this.activeCategory !== 'all') {
+      filtered = filtered.filter(
+        (item) => item.category === this.activeCategory
+      );
+    }
+
+    this.filteredItems = filtered;
+  }
+
+  filterByCategory(category: string): void {
+    this.activeCategory = category;
+
+    if (category === 'all') {
+      this.filteredItems = [...this.menuItems];
+    } else {
+      this.filteredItems = this.menuItems.filter(
+        (item) => item.category === category
+      );
+    }
+
+    // Also apply search filter if present
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredItems = this.filteredItems.filter(
+        (item) =>
+          item.itemName.toLowerCase().includes(query) ||
+          item.itemDescription.toLowerCase().includes(query)
+      );
+    }
+  }
+
+  resetFilters(): void {
+    this.searchQuery = '';
+    this.activeCategory = 'all';
+    this.filteredItems = [...this.menuItems];
   }
 
   addToCart(item: any): void {
@@ -84,7 +140,6 @@ export class MenuComponent implements OnInit {
   }
 
   private showNotification(message: string): void {
-    // Simple implementation - you might want to use a more sophisticated notification system
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;

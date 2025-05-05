@@ -95,7 +95,7 @@ public class DataInitializer implements CommandLineRunner {
                 "California Roll",
                 "Crab, avocado and cucumber roll",
                 8.99f,
-                "https://example.com/images/california-roll.jpg",
+                "https://img.freepik.com/free-photo/closeup-shot-sushi-roll-black-stone-plate_181624-28308.jpg?t=st=1746432461~exp=1746436061~hmac=b09c45c630b8d23a0358901c58df8a5721d65809027b48f1f3d7a806c8806acc&w=1380",
                 true);
 
         createMenuItem(
@@ -103,7 +103,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Salmon Nigiri",
                 "Fresh salmon over pressed vinegared rice",
                 6.99f,
-                "https://example.com/images/salmon-nigiri.jpg",
+                "https://img.freepik.com/free-photo/close-up-sticks-holding-tasty-sushi_23-2148862957.jpg?t=st=1746432565~exp=1746436165~hmac=1039f38cecf00fa2d74e5623ff80a44f6bd334548fb467520473ddce70e7989b&w=826",
                 true);
 
         createMenuItem(
@@ -111,7 +111,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Dragon Roll",
                 "Eel and cucumber inside, avocado and eel sauce on top",
                 12.99f,
-                "https://example.com/images/dragon-roll.jpg",
+                "https://img.freepik.com/free-photo/sushi-set-table_140725-6829.jpg?t=st=1746432636~exp=1746436236~hmac=bf705a0cc5f448b75125c5f7bbcc5f396ec9cbc24d98d3b54c06bc8df1d3b4b9&w=740",
                 true);
 
         createMenuItem(
@@ -119,7 +119,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Spicy Tuna Roll",
                 "Spicy tuna and cucumber",
                 9.99f,
-                "https://example.com/images/spicy-tuna.jpg",
+                "https://img.freepik.com/free-photo/closeup-shot-sushi-roll-black-stone-plate_181624-22537.jpg?t=st=1746432690~exp=1746436290~hmac=b58552b1e82a2aa8f9b48e27bb8be1b00c4a14b1e8b74aae723e8df88491f81d&w=1380",
                 true);
 
         createMenuItem(
@@ -127,7 +127,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Vegetable Tempura",
                 "Assorted vegetables fried in tempura batter",
                 7.99f,
-                "https://example.com/images/veg-tempura.jpg",
+                "https://img.freepik.com/free-photo/fried-shrimps-with-greens-garnish-sauce-served-white-flat-tray_181624-32192.jpg?t=st=1746432724~exp=1746436324~hmac=ff9b838370b9399cd56828126114c2d92b8412273862a6d342fa6d984577736c&w=1380",
                 false);
     }
 

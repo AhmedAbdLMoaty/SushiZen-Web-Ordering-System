@@ -18,10 +18,10 @@ public class CartController implements CartApi {
     private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
     private final CartService cartService;
-    private final AuthUtils authUtils;
+    private final ism.lab02_ism.util.AuthUtils authUtils;
 
     @Autowired
-    public CartController(CartService cartService, AuthUtils authUtils) {
+    public CartController(CartService cartService, ism.lab02_ism.util.AuthUtils authUtils) {
         this.cartService = cartService;
         this.authUtils = authUtils;
     }
@@ -137,8 +137,8 @@ public class CartController implements CartApi {
         }
     }
 
-    @DeleteMapping("/cart/{userId}/items/{itemId}")
-    public ResponseEntity<Void> removeItemFromCartForUser(@PathVariable String userId, @PathVariable String itemId) {
+    @Override
+    public ResponseEntity<Void> removeItemFromCartForUser(String userId, String itemId) {
         String currentUserId = authUtils.getCurrentUserId();
 
         // Only admins can remove items from other users' carts
@@ -165,29 +165,26 @@ public class CartController implements CartApi {
         }
     }
 
-    @Override
-    public ResponseEntity<Void> removeItemFromCart(String itemId) {
+    @DeleteMapping("/cart/clear")
+    public ResponseEntity<Void> clearCart() {
         String userId = authUtils.getCurrentUserId();
 
         if (userId == null) {
-            logger.warn("Unauthorized access attempt to remove item from cart");
+            logger.warn("Unauthorized access attempt to clear cart");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (itemId == null || itemId.isEmpty()) {
-            logger.warn("Invalid item ID received");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
         try {
-            logger.debug("Removing item {} from cart for user: {}", itemId, userId);
-            boolean success = cartService.removeItemFromCart(userId, itemId);
+            logger.debug("Clearing cart for user: {}", userId);
+            boolean success = cartService.clearCart(userId);
+
             if (success) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            logger.error("Error removing item from cart for user: {}", userId, e);
+            logger.error("Error clearing cart for user: {}", userId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

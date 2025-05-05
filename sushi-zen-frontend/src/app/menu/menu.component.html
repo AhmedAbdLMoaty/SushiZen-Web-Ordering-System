@@ -1,49 +1,125 @@
 <div class="menu-container">
-  <h1>Our Menu</h1>
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Our Menu</h1>
+      <p>Discover the artistry of Japanese cuisine</p>
+    </div>
+  </div>
 
-  <div *ngIf="loading" class="loading-spinner">
-    <mat-spinner></mat-spinner>
-    <p>Loading menu items...</p>
+  <div class="menu-filters">
+    <div class="search-bar">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Search menu items..."
+        [(ngModel)]="searchQuery"
+        (input)="filterItems()"
+      />
+    </div>
+
+    <div class="filter-chips">
+      <div
+        class="chip"
+        [class.active]="activeCategory === 'all'"
+        (click)="filterByCategory('all')"
+      >
+        All
+      </div>
+      <div
+        class="chip"
+        [class.active]="activeCategory === 'sushi'"
+        (click)="filterByCategory('sushi')"
+      >
+        Sushi
+      </div>
+      <div
+        class="chip"
+        [class.active]="activeCategory === 'rolls'"
+        (click)="filterByCategory('rolls')"
+      >
+        Rolls
+      </div>
+      <div
+        class="chip"
+        [class.active]="activeCategory === 'sashimi'"
+        (click)="filterByCategory('sashimi')"
+      >
+        Sashimi
+      </div>
+      <div
+        class="chip"
+        [class.active]="activeCategory === 'bowls'"
+        (click)="filterByCategory('bowls')"
+      >
+        Bowls
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="sushi-loader">
+      <div class="sushi-piece"></div>
+      <div class="chopstick chopstick-1"></div>
+      <div class="chopstick chopstick-2"></div>
+    </div>
+    <p>Loading our delicious menu...</p>
   </div>
 
   <div *ngIf="error" class="error-message">
-    <mat-icon>error</mat-icon>
+    <mat-icon>error_outline</mat-icon>
     <p>Sorry, we couldn't load the menu. Please try again later.</p>
     <button mat-raised-button color="primary" (click)="loadMenuItems()">
       Retry
     </button>
   </div>
 
-  <div class="menu-items" *ngIf="!loading && !error">
-    <mat-card *ngFor="let item of menuItems" class="menu-item">
-      <div class="item-image" *ngIf="item.itemPicture">
-        <img [src]="item.itemPicture" [alt]="item.itemName" />
+  <div class="menu-grid" *ngIf="!loading && !error">
+    <div
+      class="menu-item-card"
+      *ngFor="let item of filteredItems; let i = index"
+      [ngStyle]="{ 'animation-delay': (i % 10) * 0.1 + 's' }"
+      [class.unavailable]="!item.available"
+    >
+      <div class="item-image">
+        <img
+          [src]="item.itemPicture || 'assets/images/default-sushi.jpg'"
+          [alt]="item.itemName"
+        />
+        <div class="item-badge" *ngIf="item.popular">Popular</div>
+        <div class="item-badge unavailable" *ngIf="!item.available">
+          Unavailable
+        </div>
       </div>
-      <div class="item-info">
-        <mat-card-header>
-          <mat-card-title>{{ item.itemName }}</mat-card-title>
-          <mat-card-subtitle *ngIf="item.available" class="available"
-            >Available</mat-card-subtitle
-          >
-          <mat-card-subtitle *ngIf="!item.available" class="unavailable"
-            >Unavailable</mat-card-subtitle
-          >
-        </mat-card-header>
-        <mat-card-content>
-          <p class="item-description">{{ item.itemDescription }}</p>
-          <p class="item-price">{{ item.itemPrice | currency }}</p>
-        </mat-card-content>
-        <mat-card-actions>
+
+      <div class="item-content">
+        <h3 class="item-name">{{ item.itemName }}</h3>
+        <p class="item-description">{{ item.itemDescription }}</p>
+
+        <div class="item-footer">
+          <span class="item-price">{{ item.itemPrice | currency }}</span>
+
           <button
-            mat-raised-button
-            color="primary"
-            (click)="addToCart(item)"
+            class="add-to-cart-btn"
             [disabled]="!item.available"
+            (click)="addToCart(item)"
           >
-            <mat-icon>add_shopping_cart</mat-icon> Add to Cart
+            <mat-icon>add_shopping_cart</mat-icon>
+            <span class="btn-text">Add</span>
           </button>
-        </mat-card-actions>
+        </div>
       </div>
-    </mat-card>
+    </div>
+  </div>
+
+  <div
+    *ngIf="filteredItems.length === 0 && !loading && !error"
+    class="no-results"
+  >
+    <mat-icon>search_off</mat-icon>
+    <h3>No items found</h3>
+    <p>Try adjusting your search or filters</p>
+    <button mat-button color="primary" (click)="resetFilters()">
+      Reset Filters
+    </button>
   </div>
 </div>

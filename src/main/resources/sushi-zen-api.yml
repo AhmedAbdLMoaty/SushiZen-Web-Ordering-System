@@ -308,17 +308,23 @@ paths:
             summary: Add an item to the cart
             tags:
                 - Cart
-    /cart/{itemId}:
+    /cart/{userId}/items/{itemId}:
         delete:
-            operationId: removeItemFromCart
+            operationId: removeItemFromCartForUser
+            tags:
+                - Cart
+            summary: Remove an item from a user's cart
             parameters:
-                - explode: false
+                - name: userId
                   in: path
-                  name: itemId
                   required: true
                   schema:
                       type: string
-                  style: simple
+                - name: itemId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
             responses:
                 "204":
                     description: Item removed successfully (No Content)
@@ -326,15 +332,12 @@ paths:
                     description: Bad request - Invalid item ID
                 "401":
                     description: Unauthorized - Authentication required
+                "403":
+                    description: Forbidden - Cannot modify another user's cart
                 "404":
                     description: Not found - Item not in cart
                 "500":
                     description: Internal server error
-            summary: Remove an item from the cart
-            tags:
-                - Cart
-            x-accepts:
-                - application/json
     /orders:
         post:
             operationId: placeOrder

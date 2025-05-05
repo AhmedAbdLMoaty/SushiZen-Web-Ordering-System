@@ -1,36 +1,170 @@
 <div class="home-container">
-  <div class="hero">
-    <div class="hero-content">
-      <h1>Welcome to Sushi Zen</h1>
-      <p>Discover the finest Japanese cuisine</p>
-      <button mat-raised-button color="primary" (click)="goToMenu()">
-        View Our Menu
-      </button>
+  <!-- Hero Section: Modern Split Design -->
+  <section class="hero-section">
+    <div class="hero-image">
+      <!-- Image loaded via CSS background to ensure proper loading -->
     </div>
-  </div>
+    <div class="hero-overlay"></div>
 
-  <div class="features">
-    <div class="feature">
-      <mat-icon>restaurant</mat-icon>
-      <h2>Fresh Ingredients</h2>
-      <p>
-        We use only the freshest ingredients to create our sushi masterpieces.
-      </p>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-logo">
+          <span class="japanese-text">寿司禅</span>
+          <h1>SUSHI ZEN</h1>
+        </div>
+        <p class="tagline">Experience the art of authentic Japanese cuisine</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" (click)="goToMenu()">
+            <mat-icon>restaurant_menu</mat-icon>
+            Browse Our Menu
+          </button>
+          <button mat-stroked-button routerLink="/register">Join Now</button>
+        </div>
+      </div>
     </div>
-    <div class="feature">
-      <mat-icon>delivery_dining</mat-icon>
-      <h2>Fast Delivery</h2>
-      <p>
-        Order online and get your favorite sushi delivered to your doorstep.
-      </p>
+  </section>
+
+  <!-- Featured Menu Items Section -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Our Signature Selection</h2>
+        <p class="subtitle">Crafted with precision and passion</p>
+        <div class="jp-divider"></div>
+      </div>
+
+      <div class="featured-grid">
+        <div *ngFor="let specialty of specialties" class="featured-card">
+          <div class="featured-image">
+            <img
+              [src]="specialty.image"
+              [alt]="specialty.name"
+              onerror="this.src='assets/images/default-dish.jpg'"
+            />
+            <div class="featured-badge">人気</div>
+          </div>
+          <div class="featured-content">
+            <h3>{{ specialty.name }}</h3>
+            <p>{{ specialty.description }}</p>
+            <button mat-button routerLink="/menu">
+              Explore <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="feature">
-      <mat-icon>star</mat-icon>
-      <h2>Premium Quality</h2>
-      <p>
-        Our chefs are trained to prepare authentic Japanese cuisine of the
-        highest quality.
-      </p>
+  </section>
+
+  <!-- Story Section with Parallax -->
+  <section class="story-section">
+    <div class="parallax-bg"></div>
+    <div class="container">
+      <div class="story-content">
+        <div class="story-text">
+          <span class="japanese-accent">私たちの物語</span>
+          <h2>Our Story</h2>
+          <p>
+            Founded by Master Chef Tanaka, Sushi Zen brings the authentic
+            flavors of Japan with a modern twist. Our philosophy centers on the
+            perfect balance of flavors, textures, and presentation.
+          </p>
+          <p>
+            Every dish we create is a work of art, made with carefully selected
+            ingredients and prepared with respect to Japanese traditions.
+          </p>
+          <button mat-stroked-button>Learn More</button>
+        </div>
+        <div class="story-image">
+          <img
+            src="assets/images/chef.jpg"
+            alt="Our Master Chef"
+            onerror="this.src='assets/images/default-chef.jpg'"
+          />
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Benefits Section with Icons -->
+  <section class="benefits-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose Us</h2>
+        <p class="subtitle">Experience that makes a difference</p>
+        <div class="jp-divider"></div>
+      </div>
+
+      <div class="benefits-grid">
+        <div *ngFor="let feature of features" class="benefit-card">
+          <div class="benefit-icon">
+            <mat-icon>{{ feature.icon }}</mat-icon>
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials with Horizontal Scroll -->
+  <section class="testimonial-section">
+    <div class="container">
+      <div class="section-header light">
+        <h2>Guest Experiences</h2>
+        <p class="subtitle">What our customers say about us</p>
+        <div class="jp-divider"></div>
+      </div>
+
+      <div class="testimonial-slider">
+        <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+          <div class="quote-icon">"</div>
+          <p class="testimonial-text">{{ testimonial.quote }}</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <img
+                [src]="testimonial.avatar"
+                [alt]="testimonial.name"
+                onerror="this.src='assets/images/default-avatar.jpg'"
+              />
+            </div>
+            <div class="author-info">
+              <h4>{{ testimonial.name }}</h4>
+              <p>{{ testimonial.location }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Experience Sushi Zen?</h2>
+        <p>Join us for an unforgettable culinary journey</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" routerLink="/menu">
+            View Our Menu
+          </button>
+          <button mat-stroked-button routerLink="/reservation">
+            Make a Reservation
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Image preloader for better performance -->
+<div aria-hidden="true" style="display: none" class="preload-container">
+  <img src="assets/images/hero-sushi.jpg" alt="preload" />
+  <img src="assets/images/signature-rolls.jpg" alt="preload" />
+  <img src="assets/images/sashimi.jpg" alt="preload" />
+  <img src="assets/images/zen-platter.jpg" alt="preload" />
+  <img src="assets/images/chef.jpg" alt="preload" />
+  <img src="assets/images/testimonial-1.jpg" alt="preload" />
+  <img src="assets/images/testimonial-2.jpg" alt="preload" />
+  <img src="assets/images/testimonial-3.jpg" alt="preload" />
+  <img src="assets/images/pattern-bg.jpg" alt="preload" />
 </div>
