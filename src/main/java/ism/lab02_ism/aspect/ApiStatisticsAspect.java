@@ -6,6 +6,7 @@ import ism.lab02_ism.service.ApiStatisticsService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,19 @@ public class ApiStatisticsAspect {
         this.statisticsService = statisticsService;
     }
 
+    // Define a pointcut for controller methods
+    @Pointcut("execution(* ism.lab02_ism.controller..*.*(..))")
+    public void controllerMethods() {
+    }
+
     /**
      * Intercepts all controller API methods to collect statistics
      */
-    @Around("execution(* ism.lab02_ism.controller.*Controller.*(..))")
+    @Around("controllerMethods()")
     public Object trackApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
+        // Add this line for debugging
+        System.out.println("API CALL INTERCEPTED: " + joinPoint.getSignature().toShortString());
+
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String className = signature.getDeclaringTypeName();
         String methodName = signature.getName();
@@ -56,9 +65,6 @@ public class ApiStatisticsAspect {
         return result;
     }
 
-    /**
-     * Process the API response to collect meaningful statistics
-     */
     @SuppressWarnings("unchecked")
     private void processResponse(Object result) {
         if (result instanceof ResponseEntity) {

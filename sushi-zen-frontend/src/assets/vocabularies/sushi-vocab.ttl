@@ -1,0 +1,171 @@
+# Sushi Restaurant Custom Vocabulary
+# Namespace: https://sushizen.com/vocab/sushi#
+
+@prefix : <https://sushizen.com/vocab/sushi#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ===== SUSHI VOCABULARY ONTOLOGY =====
+
+<https://sushizen.com/vocab/sushi> a <http://www.w3.org/2002/07/owl#Ontology> ;
+    rdfs:label "Sushi Restaurant Vocabulary" ;
+    rdfs:comment "A vocabulary for describing sushi-specific concepts and properties not covered by schema.org" .
+
+# ===== CLASSES =====
+
+# Sushi Menu Item - extends schema:MenuItem
+:SushiMenuItem a rdfs:Class ;
+    rdfs:label "Sushi Menu Item" ;
+    rdfs:comment "A menu item specifically for sushi dishes" ;
+    rdfs:subClassOf schema:MenuItem .
+
+# Sushi Types
+:Nigiri a rdfs:Class ;
+    rdfs:label "Nigiri" ;
+    rdfs:comment "Hand-pressed sushi with fish over rice" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Sashimi a rdfs:Class ;
+    rdfs:label "Sashimi" ;
+    rdfs:comment "Sliced raw fish without rice" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Maki a rdfs:Class ;
+    rdfs:label "Maki" ;
+    rdfs:comment "Rolled sushi with seaweed outside" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Uramaki a rdfs:Class ;
+    rdfs:label "Uramaki" ;
+    rdfs:comment "Inside-out roll with rice outside" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Temaki a rdfs:Class ;
+    rdfs:label "Temaki" ;
+    rdfs:comment "Hand roll - cone-shaped sushi" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Chirashi a rdfs:Class ;
+    rdfs:label "Chirashi" ;
+    rdfs:comment "Scattered sushi bowl" ;
+    rdfs:subClassOf :SushiMenuItem .
+
+# ===== PROPERTIES =====
+
+# Japanese Language Properties
+:hasJapaneseName a rdf:Property ;
+    rdfs:label "has Japanese name" ;
+    rdfs:comment "The Japanese name or pronunciation of a dish" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasKanjiName a rdf:Property ;
+    rdfs:label "has Kanji name" ;
+    rdfs:comment "The Kanji characters for the dish name" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+# Sushi-specific Properties
+:isRaw a rdf:Property ;
+    rdfs:label "is raw" ;
+    rdfs:comment "Indicates if the dish contains raw fish" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+:hasSpiceLevel a rdf:Property ;
+    rdfs:label "has spice level" ;
+    rdfs:comment "The spiciness level of the dish" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasOrigin a rdf:Property ;
+    rdfs:label "has origin" ;
+    rdfs:comment "The origin or source of the main ingredient" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasFreshness a rdf:Property ;
+    rdfs:label "has freshness" ;
+    rdfs:comment "Indicates the freshness level or preparation timing" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasCuttingStyle a rdf:Property ;
+    rdfs:label "has cutting style" ;
+    rdfs:comment "The specific cutting or preparation style used" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+# Serving Properties
+:servesWithWasabi a rdf:Property ;
+    rdfs:label "serves with wasabi" ;
+    rdfs:comment "Indicates if the dish is served with wasabi" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+:servesWithSoyaSauce a rdf:Property ;
+    rdfs:label "serves with soya sauce" ;
+    rdfs:comment "Indicates if the dish is served with soy sauce" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+:servesWithGinger a rdf:Property ;
+    rdfs:label "serves with ginger" ;
+    rdfs:comment "Indicates if the dish is served with pickled ginger" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+# Preparation Properties
+:hasRiceType a rdf:Property ;
+    rdfs:label "has rice type" ;
+    rdfs:comment "The type of sushi rice used" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasSeaweedType a rdf:Property ;
+    rdfs:label "has seaweed type" ;
+    rdfs:comment "The type of seaweed (nori) used" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasPieceCount a rdf:Property ;
+    rdfs:label "has piece count" ;
+    rdfs:comment "Number of pieces served" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:integer .
+
+# Chef and Skill Properties
+:requiresSpecialSkill a rdf:Property ;
+    rdfs:label "requires special skill" ;
+    rdfs:comment "Indicates if the dish requires special preparation skills" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+:preparedBy a rdf:Property ;
+    rdfs:label "prepared by" ;
+    rdfs:comment "The chef or skill level required for preparation" ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range schema:Person .
+
+# ===== EXAMPLES AND ANNOTATIONS =====
+
+# Example instances (for documentation purposes)
+:exampleDragonRoll a :Uramaki ;
+    rdfs:label "Dragon Roll Example" ;
+    :hasJapaneseName "ドラゴンロール" ;
+    :isRaw false ;
+    :hasSpiceLevel "mild" ;
+    :servesWithWasabi true ;
+    :servesWithSoyaSauce true ;
+    :servesWithGinger true .
+
+:exampleSalmonSashimi a :Sashimi ;
+    rdfs:label "Salmon Sashimi Example" ;
+    :hasJapaneseName "サーモン刺身" ;
+    :isRaw true ;
+    :hasOrigin "Norwegian Atlantic" ;
+    :hasFreshness "daily" ;
+    :hasCuttingStyle "traditional sashimi cut" ;
+    :hasPieceCount 6 .

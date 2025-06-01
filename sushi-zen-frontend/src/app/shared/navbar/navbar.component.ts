@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -22,9 +23,13 @@ import { CartService } from '../../services/cart.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   cartItemCount = 0;
   isMobileMenuOpen = false;
+  isLoggedIn = false;
+  isAdmin = false;
+  isKitchenStaff = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     public authService: AuthService,
@@ -32,9 +37,24 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cartService.cartItems$.subscribe((count) => {
-      this.cartItemCount = count;
-    });
+    this.subscriptions.push(
+      this.cartService.cartItems$.subscribe((count) => {
+        this.cartItemCount = count;
+      })
+    );
+
+    // Subscribe to user changes to update role flags
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe((user) => {
+        this.isLoggedIn = !!user;
+        this.isAdmin = user?.role === 'ADMIN';
+        this.isKitchenStaff = user?.role === 'Kitchen_staff';
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   logout(): void {

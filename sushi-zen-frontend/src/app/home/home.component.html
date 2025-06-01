@@ -1,18 +1,42 @@
-<div class="home-container">
-  <!-- Hero Section: Modern Split Design -->
-  <section class="hero-section">
-    <div class="hero-image">
-      <!-- Image loaded via CSS background to ensure proper loading -->
+<div
+  class="home-container"
+  vocab="https://schema.org/"
+  typeof="Restaurant"
+  resource="https://sushizen.com"
+>
+  <!-- Add hidden Restaurant metadata at the top -->
+  <div style="display: none">
+    <span property="name">Sushi Zen</span>
+    <img
+      property="image"
+      src="assets/images/hero-sushi.jpg"
+      alt="Sushi Zen Restaurant"
+    />
+    <span property="telephone">+1 (555) 123-4567</span>
+    <span property="priceRange">$$</span>
+    <span property="servesCuisine">Japanese</span>
+    <div property="address" typeof="PostalAddress">
+      <span property="streetAddress">123 Sakura Street</span>
+      <span property="addressLocality">Downtown</span>
+      <span property="addressRegion">CA</span>
+      <span property="postalCode">90210</span>
+      <span property="addressCountry">US</span>
     </div>
+  </div>
+
+  <section class="hero-section" typeof="Place">
+    <div class="hero-image"></div>
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
       <div class="hero-text">
         <div class="hero-logo">
-          <span class="japanese-text">寿司禅</span>
-          <h1>SUSHI ZEN</h1>
+          <span class="japanese-text" property="alternateName">寿司禅</span>
+          <h1 property="name">SUSHI ZEN</h1>
         </div>
-        <p class="tagline">Experience the art of authentic Japanese cuisine</p>
+        <p class="tagline" property="description">
+          Experience the art of authentic Japanese cuisine
+        </p>
         <div class="cta-buttons">
           <button mat-raised-button color="primary" (click)="goToMenu()">
             <mat-icon>restaurant_menu</mat-icon>
@@ -24,8 +48,7 @@
     </div>
   </section>
 
-  <!-- Featured Menu Items Section -->
-  <section class="featured-section">
+  <section class="featured-section" typeof="Menu" property="hasMenu">
     <div class="container">
       <div class="section-header">
         <h2>Our Signature Selection</h2>
@@ -34,18 +57,24 @@
       </div>
 
       <div class="featured-grid">
-        <div *ngFor="let specialty of specialties" class="featured-card">
+        <div
+          *ngFor="let specialty of specialties"
+          class="featured-card"
+          typeof="MenuSection"
+          property="hasMenuSection"
+        >
           <div class="featured-image">
             <img
               [src]="specialty.image"
               [alt]="specialty.name"
+              property="image"
               onerror="this.src='assets/images/default-dish.jpg'"
             />
             <div class="featured-badge">人気</div>
           </div>
           <div class="featured-content">
-            <h3>{{ specialty.name }}</h3>
-            <p>{{ specialty.description }}</p>
+            <h3 property="name">{{ specialty.name }}</h3>
+            <p property="description">{{ specialty.description }}</p>
             <button mat-button routerLink="/menu">
               Explore <mat-icon>arrow_forward</mat-icon>
             </button>
@@ -54,16 +83,15 @@
       </div>
     </div>
   </section>
-
   <!-- Story Section with Parallax -->
-  <section class="story-section">
+  <section class="story-section" typeof="AboutPage" property="about">
     <div class="parallax-bg"></div>
     <div class="container">
       <div class="story-content">
         <div class="story-text">
           <span class="japanese-accent">私たちの物語</span>
           <h2>Our Story</h2>
-          <p>
+          <p property="description">
             Founded by Master Chef Tanaka, Sushi Zen brings the authentic
             flavors of Japan with a modern twist. Our philosophy centers on the
             perfect balance of flavors, textures, and presentation.
@@ -78,6 +106,7 @@
           <img
             src="assets/images/chef.jpg"
             alt="Our Master Chef"
+            property="image"
             onerror="this.src='assets/images/default-chef.jpg'"
           />
         </div>
@@ -95,12 +124,17 @@
       </div>
 
       <div class="benefits-grid">
-        <div *ngFor="let feature of features" class="benefit-card">
+        <div
+          *ngFor="let feature of features"
+          class="benefit-card"
+          typeof="Service"
+          property="makesOffer"
+        >
           <div class="benefit-icon">
             <mat-icon>{{ feature.icon }}</mat-icon>
           </div>
-          <h3>{{ feature.title }}</h3>
-          <p>{{ feature.description }}</p>
+          <h3 property="name">{{ feature.title }}</h3>
+          <p property="description">{{ feature.description }}</p>
         </div>
       </div>
     </div>
@@ -116,20 +150,28 @@
       </div>
 
       <div class="testimonial-slider">
-        <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+        <div
+          *ngFor="let testimonial of testimonials"
+          class="testimonial-card"
+          typeof="Review"
+          property="review"
+        >
           <div class="quote-icon">"</div>
-          <p class="testimonial-text">{{ testimonial.quote }}</p>
-          <div class="testimonial-author">
+          <p class="testimonial-text" property="reviewBody">
+            {{ testimonial.quote }}
+          </p>
+          <div class="testimonial-author" typeof="Person" property="author">
             <div class="author-avatar">
               <img
                 [src]="testimonial.avatar"
                 [alt]="testimonial.name"
+                property="image"
                 onerror="this.src='assets/images/default-avatar.jpg'"
               />
             </div>
             <div class="author-info">
-              <h4>{{ testimonial.name }}</h4>
-              <p>{{ testimonial.location }}</p>
+              <h4 property="name">{{ testimonial.name }}</h4>
+              <p property="address">{{ testimonial.location }}</p>
             </div>
           </div>
         </div>

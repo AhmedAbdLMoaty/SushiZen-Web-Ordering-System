@@ -1,8 +1,52 @@
-<div class="menu-container">
+<div
+  class="menu-container"
+  vocab="https://schema.org/"
+  typeof="Menu"
+  resource="https://sushizen.com/menu"
+>
+  <!-- JSON-LD for Menu Items -->
+  <script type="application/ld+json" *ngIf="filteredItems.length > 0">
+    {
+      "@context": ["https://schema.org", "https://sushizen.com/vocab/sushi"],
+      "@type": "Menu",
+      "name": "Sushi Zen Menu",
+      "description": "Discover the artistry of Japanese cuisine",
+      "url": "https://sushizen.com/menu",
+      "hasMenuSection": [
+        {
+          "@type": "MenuSection",
+          "name": "Sushi",
+          "hasMenuItem": [
+            *ngFor="let item of filteredItems.filter(i => i.category === 'sushi'); let isLast = last"
+            {
+              "@type": ["MenuItem", "SushiMenuItem"],
+              "name": "{{ item.itemName }}",
+              "description": "{{ item.itemDescription }}",
+              "image": "{{ item.itemPicture || 'assets/images/default-sushi.jpg' }}",
+              "offers": {
+                "@type": "Offer",
+                "price": "{{ item.itemPrice }}",
+                "priceCurrency": "USD",
+                "availability": "{{ item.available ? 'InStock' : 'OutOfStock' }}"
+              },
+              "nutrition": {
+                "@type": "NutritionInformation",
+                "calories": "{{ item.calories || 'N/A' }}"
+              },
+              "isVegetarian": {{ item.isVegetarian || false }},
+              "hasJapaneseName": "{{ item.japaneseName || '' }}",
+              "isRaw": {{ item.isRaw || false }}
+            }{{ !isLast ? ',' : '' }}
+          ]
+        }
+      ]
+    }
+  </script>
+
   <div class="page-header">
     <div class="header-content">
-      <h1>Our Menu</h1>
-      <p>Discover the artistry of Japanese cuisine</p>
+      <h1 property="name">Our Menu</h1>
+      <p property="description">Discover the artistry of Japanese cuisine</p>
     </div>
   </div>
 
@@ -29,6 +73,8 @@
         class="chip"
         [class.active]="activeCategory === 'sushi'"
         (click)="filterByCategory('sushi')"
+        typeof="MenuSection"
+        property="hasMenuSection"
       >
         Sushi
       </div>
@@ -36,6 +82,8 @@
         class="chip"
         [class.active]="activeCategory === 'rolls'"
         (click)="filterByCategory('rolls')"
+        typeof="MenuSection"
+        property="hasMenuSection"
       >
         Rolls
       </div>
@@ -43,6 +91,8 @@
         class="chip"
         [class.active]="activeCategory === 'sashimi'"
         (click)="filterByCategory('sashimi')"
+        typeof="MenuSection"
+        property="hasMenuSection"
       >
         Sashimi
       </div>
@@ -50,6 +100,8 @@
         class="chip"
         [class.active]="activeCategory === 'bowls'"
         (click)="filterByCategory('bowls')"
+        typeof="MenuSection"
+        property="hasMenuSection"
       >
         Bowls
       </div>
@@ -72,18 +124,20 @@
       Retry
     </button>
   </div>
-
   <div class="menu-grid" *ngIf="!loading && !error">
     <div
       class="menu-item-card"
       *ngFor="let item of filteredItems; let i = index"
       [ngStyle]="{ 'animation-delay': (i % 10) * 0.1 + 's' }"
       [class.unavailable]="!item.available"
+      typeof="MenuItem"
+      property="hasMenuItem"
     >
       <div class="item-image">
         <img
           [src]="item.itemPicture || 'assets/images/default-sushi.jpg'"
           [alt]="item.itemName"
+          property="image"
         />
         <div class="item-badge" *ngIf="item.popular">Popular</div>
         <div class="item-badge unavailable" *ngIf="!item.available">
@@ -92,11 +146,16 @@
       </div>
 
       <div class="item-content">
-        <h3 class="item-name">{{ item.itemName }}</h3>
-        <p class="item-description">{{ item.itemDescription }}</p>
+        <h3 class="item-name" property="name">{{ item.itemName }}</h3>
+        <p class="item-description" property="description">
+          {{ item.itemDescription }}
+        </p>
 
         <div class="item-footer">
-          <span class="item-price">{{ item.itemPrice | currency }}</span>
+          <span class="item-price" property="offers" typeof="Offer">
+            <span property="price">{{ item.itemPrice | currency }}</span>
+            <meta property="priceCurrency" content="USD" />
+          </span>
 
           <button
             class="add-to-cart-btn"

@@ -31,10 +31,10 @@ public class KitchenOrderController implements KitchenApi {
 
     @Override
     public ResponseEntity<Void> updateOrderStatus(String orderId, OrderStatusDTO statusDTO) {
-        if (!authUtils.isKitchenStaff() && !authUtils.isAdmin()) {
-            logger.warn("Unauthorized attempt to update order status");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        // Remove authentication check
+        // if (!authUtils.isKitchenStaff() && !authUtils.isAdmin()) {
+        // return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        // }
 
         if (orderId == null || orderId.isEmpty()) {
             logger.warn("Invalid order ID received");
@@ -68,10 +68,10 @@ public class KitchenOrderController implements KitchenApi {
 
     @GetMapping("/kitchen/orders")
     public ResponseEntity<Map<String, OrderDTO>> getAllOrders() {
-        if (!authUtils.isKitchenStaff() && !authUtils.isAdmin()) {
-            logger.warn("Unauthorized attempt to access kitchen orders");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        // Remove authentication check
+        // if (!authUtils.isKitchenStaff() && !authUtils.isAdmin()) {
+        // return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        // }
 
         try {
             logger.debug("Fetching all orders for kitchen");

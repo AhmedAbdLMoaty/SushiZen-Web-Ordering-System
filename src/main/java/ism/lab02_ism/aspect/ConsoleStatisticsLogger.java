@@ -38,7 +38,6 @@ public class ConsoleStatisticsLogger {
         String controllerName = joinPoint.getSignature().getDeclaringType().getSimpleName();
         String endpoint = controllerName + "." + methodName;
 
-        // Skip statistics controller itself to avoid infinite loops
         if (controllerName.equals("StatisticsController")) {
             return joinPoint.proceed();
         }

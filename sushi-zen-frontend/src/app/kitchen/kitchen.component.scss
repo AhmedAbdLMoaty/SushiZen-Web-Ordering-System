@@ -1,0 +1,215 @@
+.kitchen-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  background-image: url("/assets/images/sushi-pattern.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-lg);
+  padding: 3rem 1rem;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(44, 62, 80, 0.7) 100%
+    );
+    z-index: 1;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+  }
+}
+
+.loading-container,
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+
+  p {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+
+  mat-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    color: var(--error);
+    margin-bottom: 1rem;
+  }
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  border-top: 4px solid var(--secondary);
+
+  &.status-pending {
+    border-top-color: var(--warning);
+  }
+
+  &.status-preparing {
+    border-top-color: var(--primary);
+  }
+
+  &.status-ready {
+    border-top-color: var(--success);
+  }
+
+  &.status-delivered {
+    border-top-color: var(--secondary);
+  }
+
+  &.status-cancelled {
+    border-top-color: var(--error);
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: white;
+  margin-left: 0.5rem;
+
+  &.status-pending {
+    background-color: var(--warning);
+  }
+
+  &.status-preparing {
+    background-color: var(--primary);
+  }
+
+  &.status-ready {
+    background-color: var(--success);
+  }
+
+  &.status-delivered {
+    background-color: var(--secondary);
+  }
+
+  &.status-cancelled {
+    background-color: var(--error);
+  }
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.order-items {
+  margin-bottom: 1rem;
+
+  h4 {
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0.5rem;
+
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.customer-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+  p {
+    margin: 0.5rem 0;
+  }
+}
+
+.status-select {
+  width: 100%;
+}
+
+.no-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}
+
+@media (max-width: 768px) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header .header-content h1 {
+    font-size: 2rem;
+  }
+}

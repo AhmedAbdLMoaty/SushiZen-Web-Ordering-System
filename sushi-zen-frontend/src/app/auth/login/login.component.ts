@@ -79,7 +79,14 @@ export class LoginComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          if (this.addToCartItemId) {
+          // Add this debug log
+          console.log('Current user:', this.authService.getCurrentUser());
+
+          // Check if the user is kitchen staff and redirect accordingly
+          if (this.authService.isKitchenStaff()) {
+            console.log('User is kitchen staff, redirecting to /kitchen');
+            this.router.navigate(['/kitchen']);
+          } else if (this.addToCartItemId) {
             this.addItemToCartAfterLogin(this.addToCartItemId);
           } else {
             this.router.navigate([this.returnUrl]);

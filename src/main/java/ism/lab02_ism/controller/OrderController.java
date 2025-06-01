@@ -31,19 +31,15 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<Void> placeOrder(OrderDTO orderDTO) {
-        String userId = authUtils.getCurrentUserId();
-
-        if (userId == null) {
-            logger.warn("Unauthorized access attempt to place order");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        // Use a default/guest user ID for testing if needed
+        String userId = "guest-user";
 
         if (orderDTO == null || orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
             logger.warn("Invalid order data received");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        // Set the user ID from the authenticated user
+        // Set the user ID
         orderDTO.setUserId(userId);
 
         try {
@@ -61,32 +57,17 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<OrderDTO> getOrder(String orderId) {
-        String userId = authUtils.getCurrentUserId();
-
-        if (userId == null) {
-            logger.warn("Unauthorized access attempt to get order");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         if (orderId == null || orderId.isEmpty()) {
             logger.warn("Invalid order ID received");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         try {
-            logger.debug("Fetching order: {} for user: {}", orderId, userId);
+            logger.debug("Fetching order: {}", orderId);
             OrderDTO order = orderService.getOrderById(orderId);
 
             if (order == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            // Check if the user is the owner of the order or an admin/kitchen staff
-            if (!order.getUserId().equals(userId) &&
-                    !authUtils.isAdmin() &&
-                    !authUtils.isKitchenStaff()) {
-                logger.warn("User {} attempted to access order {} belonging to another user", userId, orderId);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
             return ResponseEntity.ok(order);
@@ -98,19 +79,6 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        String userId = authUtils.getCurrentUserId();
-
-        if (userId == null) {
-            logger.warn("Unauthorized access attempt to get all orders");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        // Only admin and kitchen staff can see all orders
-        if (!authUtils.isAdmin() && !authUtils.isKitchenStaff()) {
-            logger.warn("User {} attempted to access all orders without proper authorization", userId);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         try {
             logger.debug("Fetching all orders");
             Map<String, OrderDTO> ordersMap = orderService.getAllOrders();

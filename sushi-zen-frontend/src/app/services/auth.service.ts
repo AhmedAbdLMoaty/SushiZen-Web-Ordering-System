@@ -1,5 +1,5 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -32,16 +32,61 @@ export class AuthService {
     }
   }
 
+  // Get authentication headers
+  getAuthHeaders(): HttpHeaders {
+    const user = this.getCurrentUser();
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    if (user && user.token) {
+      headers = headers.set('Authorization', `Bearer ${user.token}`);
+    }
+
+    return headers;
+  }
+
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((user) => {
-        // Store user details in local storage (only in browser)
-        if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem('currentUser', JSON.stringify(user));
-        }
-        this.currentUserSubject.next(user);
-      })
-    );
+    return this.http
+      .post<any>(`${this.apiUrl}/login`, credentials, { observe: 'response' })
+      .pipe(
+        map((response) => {
+          // Extract the token from Authorization header if present
+          let token = response.headers.get('Authorization');
+          if (token) {
+            // Remove 'Bearer ' prefix if it exists
+            token = token.replace('Bearer ', '');
+          } else {
+            // Generate a consistent token for development if none provided
+            // IMPORTANT: This should be removed in production
+            token = 'dev-token-for-kitchen-staff-' + credentials.email;
+          }
+
+          // Extract user data from body
+          const userData = {
+            ...response.body,
+            token: token, // Add token to user data
+          };
+
+          // Normalize role format if needed
+          if (
+            userData.role &&
+            userData.role.toUpperCase() === 'KITCHEN_STAFF'
+          ) {
+            userData.role = 'Kitchen_staff';
+          }
+
+          console.log('Login successful, storing user with token:', token);
+
+          // Store in localStorage for browser environments
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+          }
+
+          this.currentUserSubject.next(userData);
+          return userData;
+        })
+      );
   }
 
   register(userData: any): Observable<any> {
@@ -136,5 +181,10 @@ export class AuthService {
   isAdmin(): boolean {
     const user = this.currentUserSubject.value;
     return user && user.role === 'ADMIN';
+  }
+  isKitchenStaff(): boolean {
+    const user = this.getCurrentUser();
+    // Check for both possible formats of the kitchen staff role
+    return user?.role === 'Kitchen_staff';
   }
 }

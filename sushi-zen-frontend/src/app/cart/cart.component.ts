@@ -10,6 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '../services/cart.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../services/menu.service';
+import { AuthService } from '../services/auth.service'; // Add this
+import { OrderService } from '../services/order.service'; // Add this
 
 @Component({
   selector: 'app-cart',
@@ -40,7 +42,9 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private router: Router,
     private menuService: MenuService,
-    private snackBar: MatSnackBar // Add this
+    private snackBar: MatSnackBar,
+    private authService: AuthService, // Add this
+    private orderService: OrderService // Add this
   ) {}
 
   ngOnInit(): void {
@@ -170,19 +174,35 @@ export class CartComponent implements OnInit {
   }
 
   checkout(): void {
-    // First clear the cart
-    this.cartService.clearCart().subscribe({
+    if (!this.cart || !this.cart.items || this.cart.items.length === 0) {
+      this.snackBar.open('Your cart is empty', 'Close', { duration: 3000 });
+      return;
+    }
+
+    // Create order from cart
+    const order = {
+      userId: this.authService.getCurrentUser()?.userId,
+      items: this.cart.items,
+      status: 'PENDING',
+      paymentStatus: 'PAID', // In a real app, handle payment processing
+      totalPrice: this.calculateTotal(),
+    };
+
+    // Place the order
+    this.orderService.placeOrder(order).subscribe({
       next: () => {
-        console.log('Cart cleared successfully');
-        // Show a success message or notification
+        // Success - show notification
         this.showCheckoutSuccess();
-        // Navigate to checkout completion page
-        this.router.navigate(['/checkout-success']);
+        // Navigate to order confirmation
+        this.router.navigate(['/order-confirmation']);
       },
-      error: (err) => {
-        console.error('Error clearing cart:', err);
-        // Still navigate to checkout but may need to handle the error
-        this.router.navigate(['/checkout']);
+      error: (err: any) => {
+        // Add type annotation here
+        console.error('Error placing order:', err);
+        this.snackBar.open('There was a problem placing your order', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
       },
     });
   }

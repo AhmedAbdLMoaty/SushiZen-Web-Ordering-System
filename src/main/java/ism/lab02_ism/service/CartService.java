@@ -7,7 +7,7 @@ import ism.lab02_ism.entity.User;
 import ism.lab02_ism.model.CartDTO;
 import ism.lab02_ism.model.CartItemDTO;
 import ism.lab02_ism.repository.CartItemRepository;
-import ism.lab02_ism.repository.CartRepository; // Make sure this import is correct
+import ism.lab02_ism.repository.CartRepository;
 import ism.lab02_ism.repository.MenuItemRepository;
 import ism.lab02_ism.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    private final ism.lab02_ism.repository.CartRepository cartRepository; // Use fully qualified name
+    private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final MenuItemRepository menuItemRepository;
 
     @Autowired
-    public CartService(ism.lab02_ism.repository.CartRepository cartRepository, // Use fully qualified name
+    public CartService(CartRepository cartRepository,
             CartItemRepository cartItemRepository,
             UserRepository userRepository,
             MenuItemRepository menuItemRepository) {
@@ -141,12 +141,6 @@ public class CartService {
         return false;
     }
 
-    /**
-     * Clears all items from a user's cart without deleting the cart itself.
-     *
-     * @param userId The user ID whose cart should be cleared
-     * @return true if the cart was successfully cleared, false otherwise
-     */
     @Transactional
     public boolean clearCart(String userId) {
         Optional<User> userOptional = userRepository.findByUserId(userId);

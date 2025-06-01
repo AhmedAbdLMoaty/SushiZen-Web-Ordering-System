@@ -26,7 +26,7 @@
         <span>Menu</span>
       </a>
 
-      <ng-container *ngIf="authService.isLoggedIn(); else notLoggedIn">
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
         <a
           class="nav-link cart-link"
           routerLink="/cart"
@@ -60,15 +60,24 @@
           <span>Register</span>
         </a>
       </ng-template>
-
       <a
         class="nav-link admin-link"
-        *ngIf="authService.isAdmin()"
+        *ngIf="isAdmin"
         routerLink="/admin"
         routerLinkActive="active"
       >
         <mat-icon>admin_panel_settings</mat-icon>
         <span>Admin</span>
+      </a>
+
+      <a
+        class="nav-link kitchen-link"
+        *ngIf="isKitchenStaff"
+        routerLink="/kitchen"
+        routerLinkActive="active"
+      >
+        <mat-icon>restaurant</mat-icon>
+        <span>Kitchen</span>
       </a>
     </div>
 
