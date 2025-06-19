@@ -1,0 +1,329 @@
+@prefix : <http://www.semanticweb.org/sushi-ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+
+# Ontology Declaration
+<http://www.semanticweb.org/sushi-ontology> rdf:type owl:Ontology ;
+    rdfs:label "Sushi Restaurant Ontology"@en ;
+    rdfs:comment "A custom ontology for describing sushi restaurants, menu items, and related concepts"@en ;
+    owl:versionInfo "1.0" .
+
+#################################################################
+#    Classes
+#################################################################
+
+# Core Classes
+:Restaurant rdf:type owl:Class ;
+    rdfs:label "Restaurant"@en ;
+    rdfs:comment "A sushi restaurant establishment"@en ;
+    rdfs:subClassOf schema:Restaurant .
+
+:Person rdf:type owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "A person associated with the restaurant"@en ;
+    rdfs:subClassOf schema:Person .
+
+:MenuItem rdf:type owl:Class ;
+    rdfs:label "Menu Item"@en ;
+    rdfs:comment "An item available on the restaurant menu"@en ;
+    rdfs:subClassOf schema:MenuItem .
+
+# Sushi-specific Menu Item Classes
+:SushiMenuItem rdf:type owl:Class ;
+    rdfs:label "Sushi Menu Item"@en ;
+    rdfs:comment "A sushi-specific menu item"@en ;
+    rdfs:subClassOf :MenuItem .
+
+:Nigiri rdf:type owl:Class ;
+    rdfs:label "Nigiri"@en ;
+    rdfs:comment "Hand-pressed sushi with fish over rice"@en ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Sashimi rdf:type owl:Class ;
+    rdfs:label "Sashimi"@en ;
+    rdfs:comment "Sliced raw fish without rice"@en ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Maki rdf:type owl:Class ;
+    rdfs:label "Maki"@en ;
+    rdfs:comment "Rolled sushi with nori outside"@en ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Uramaki rdf:type owl:Class ;
+    rdfs:label "Uramaki"@en ;
+    rdfs:comment "Inside-out rolled sushi with rice outside"@en ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Temaki rdf:type owl:Class ;
+    rdfs:label "Temaki"@en ;
+    rdfs:comment "Hand roll sushi in cone shape"@en ;
+    rdfs:subClassOf :SushiMenuItem .
+
+:Tempura rdf:type owl:Class ;
+    rdfs:label "Tempura"@en ;
+    rdfs:comment "Battered and fried food"@en ;
+    rdfs:subClassOf :MenuItem .
+
+# Person Types
+:Chef rdf:type owl:Class ;
+    rdfs:label "Chef"@en ;
+    rdfs:comment "A professional chef"@en ;
+    rdfs:subClassOf :Person .
+
+:SushiChef rdf:type owl:Class ;
+    rdfs:label "Sushi Chef"@en ;
+    rdfs:comment "A chef specialized in sushi preparation"@en ;
+    rdfs:subClassOf :Chef .
+
+:KitchenStaff rdf:type owl:Class ;
+    rdfs:label "Kitchen Staff"@en ;
+    rdfs:comment "Staff working in the kitchen"@en ;
+    rdfs:subClassOf :Person .
+
+:Server rdf:type owl:Class ;
+    rdfs:label "Server"@en ;
+    rdfs:comment "Restaurant server"@en ;
+    rdfs:subClassOf :Person .
+
+:Manager rdf:type owl:Class ;
+    rdfs:label "Manager"@en ;
+    rdfs:comment "Restaurant manager"@en ;
+    rdfs:subClassOf :Person .
+
+# Service Classes
+:DiningOption rdf:type owl:Class ;
+    rdfs:label "Dining Option"@en ;
+    rdfs:comment "Available dining options"@en .
+
+:PaymentMethod rdf:type owl:Class ;
+    rdfs:label "Payment Method"@en ;
+    rdfs:comment "Available payment methods"@en .
+
+:Order rdf:type owl:Class ;
+    rdfs:label "Order"@en ;
+    rdfs:comment "Customer order"@en ;
+    rdfs:subClassOf schema:Order .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+:hasMenuItem rdf:type owl:ObjectProperty ;
+    rdfs:label "has menu item"@en ;
+    rdfs:comment "Restaurant has a menu item"@en ;
+    rdfs:domain :Restaurant ;
+    rdfs:range :MenuItem .
+
+:employs rdf:type owl:ObjectProperty ;
+    rdfs:label "employs"@en ;
+    rdfs:comment "Restaurant employs a person"@en ;
+    rdfs:domain :Restaurant ;
+    rdfs:range :Person .
+
+:hasDiningOption rdf:type owl:ObjectProperty ;
+    rdfs:label "has dining option"@en ;
+    rdfs:comment "Restaurant offers a dining option"@en ;
+    rdfs:domain :Restaurant ;
+    rdfs:range :DiningOption .
+
+:offersPaymentMethod rdf:type owl:ObjectProperty ;
+    rdfs:label "offers payment method"@en ;
+    rdfs:comment "Restaurant accepts a payment method"@en ;
+    rdfs:domain :Restaurant ;
+    rdfs:range :PaymentMethod .
+
+:hasIngredient rdf:type owl:ObjectProperty ;
+    rdfs:label "has ingredient"@en ;
+    rdfs:comment "Menu item contains an ingredient"@en ;
+    rdfs:domain :MenuItem ;
+    rdfs:range schema:Ingredient .
+
+:servesMenuItem rdf:type owl:ObjectProperty ;
+    rdfs:label "serves menu item"@en ;
+    rdfs:comment "Person serves a menu item"@en ;
+    rdfs:domain :Person ;
+    rdfs:range :MenuItem .
+
+:preparesMenuItem rdf:type owl:ObjectProperty ;
+    rdfs:label "prepares menu item"@en ;
+    rdfs:comment "Chef prepares a menu item"@en ;
+    rdfs:domain :Chef ;
+    rdfs:range :MenuItem .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+:hasName rdf:type owl:DatatypeProperty ;
+    rdfs:label "has name"@en ;
+    rdfs:comment "Name of an entity"@en ;
+    rdfs:range xsd:string .
+
+:hasJapaneseName rdf:type owl:DatatypeProperty ;
+    rdfs:label "has Japanese name"@en ;
+    rdfs:comment "Japanese name of a sushi item"@en ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:string .
+
+:hasAddress rdf:type owl:DatatypeProperty ;
+    rdfs:label "has address"@en ;
+    rdfs:comment "Address of the restaurant"@en ;
+    rdfs:domain :Restaurant ;
+    rdfs:range xsd:string .
+
+:hasPrice rdf:type owl:DatatypeProperty ;
+    rdfs:label "has price"@en ;
+    rdfs:comment "Price of a menu item"@en ;
+    rdfs:domain :MenuItem ;
+    rdfs:range xsd:decimal .
+
+:hasDescription rdf:type owl:DatatypeProperty ;
+    rdfs:label "has description"@en ;
+    rdfs:comment "Description of an entity"@en ;
+    rdfs:range xsd:string .
+
+:isRaw rdf:type owl:DatatypeProperty ;
+    rdfs:label "is raw"@en ;
+    rdfs:comment "Indicates if the fish is raw"@en ;
+    rdfs:domain :SushiMenuItem ;
+    rdfs:range xsd:boolean .
+
+:hasOrigin rdf:type owl:DatatypeProperty ;
+    rdfs:label "has origin"@en ;
+    rdfs:comment "Origin location of an ingredient"@en ;
+    rdfs:range xsd:string .
+
+:isAvailable rdf:type owl:DatatypeProperty ;
+    rdfs:label "is available"@en ;
+    rdfs:comment "Indicates if a menu item is currently available"@en ;
+    rdfs:domain :MenuItem ;
+    rdfs:range xsd:boolean .
+
+:hasCalories rdf:type owl:DatatypeProperty ;
+    rdfs:label "has calories"@en ;
+    rdfs:comment "Calorie content of a menu item"@en ;
+    rdfs:domain :MenuItem ;
+    rdfs:range xsd:integer .
+
+:isSpicy rdf:type owl:DatatypeProperty ;
+    rdfs:label "is spicy"@en ;
+    rdfs:comment "Indicates if a menu item is spicy"@en ;
+    rdfs:domain :MenuItem ;
+    rdfs:range xsd:boolean .
+
+:hasExperience rdf:type owl:DatatypeProperty ;
+    rdfs:label "has experience"@en ;
+    rdfs:comment "Years of experience of a chef"@en ;
+    rdfs:domain :Chef ;
+    rdfs:range xsd:integer .
+
+:hasPhoneNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phone number"@en ;
+    rdfs:comment "Phone number"@en ;
+    rdfs:range xsd:string .
+
+:hasEmail rdf:type owl:DatatypeProperty ;
+    rdfs:label "has email"@en ;
+    rdfs:comment "Email address"@en ;
+    rdfs:range xsd:string .
+
+#################################################################
+#    Individuals/Instances
+#################################################################
+
+# Restaurant Instance
+:SushiZenRestaurant rdf:type :Restaurant ;
+    :hasName "Sushi Zen" ;
+    :hasAddress "123 Sushi Street, Foodie District" ;
+    :hasPhoneNumber "+1-555-SUSHI" ;
+    :hasEmail "info@sushizen.com" .
+
+# Dining Options
+:Dine-In rdf:type :DiningOption ;
+    :hasName "Dine-In" .
+
+:Takeout rdf:type :DiningOption ;
+    :hasName "Takeout" .
+
+:Delivery rdf:type :DiningOption ;
+    :hasName "Delivery" .
+
+# Payment Methods
+:CreditCard rdf:type :PaymentMethod ;
+    :hasName "Credit Card" .
+
+:Cash rdf:type :PaymentMethod ;
+    :hasName "Cash" .
+
+:DigitalWallet rdf:type :PaymentMethod ;
+    :hasName "Digital Wallet" .
+
+# Sample Menu Items
+:CaliforniaRoll rdf:type :Uramaki ;
+    :hasName "California Roll" ;
+    :hasJapaneseName "カリフォルニアロール" ;
+    :hasDescription "Crab, avocado and cucumber roll" ;
+    :hasPrice "8.99"^^xsd:decimal ;
+    :isAvailable true ;
+    :isRaw false .
+
+:SalmonNigiri rdf:type :Nigiri ;
+    :hasName "Salmon Nigiri" ;
+    :hasJapaneseName "サーモン握り" ;
+    :hasDescription "Fresh salmon over pressed vinegared rice" ;
+    :hasPrice "6.99"^^xsd:decimal ;
+    :isAvailable true ;
+    :isRaw true .
+
+:DragonRoll rdf:type :Uramaki ;
+    :hasName "Dragon Roll" ;
+    :hasJapaneseName "ドラゴンロール" ;
+    :hasDescription "Eel and cucumber inside, avocado and eel sauce on top" ;
+    :hasPrice "12.99"^^xsd:decimal ;
+    :isAvailable true ;
+    :isRaw false .
+
+:SpicyTunaRoll rdf:type :Maki ;
+    :hasName "Spicy Tuna Roll" ;
+    :hasJapaneseName "スパイシーツナロール" ;
+    :hasDescription "Spicy tuna and cucumber" ;
+    :hasPrice "9.99"^^xsd:decimal ;
+    :isAvailable true ;
+    :isRaw true ;
+    :isSpicy true .
+
+# Sample Staff
+:MasterChefTanaka rdf:type :SushiChef ;
+    :hasName "Chef Tanaka" ;
+    :hasExperience 15 ;
+    :hasEmail "tanaka@sushizen.com" .
+
+:KitchenStaffSato rdf:type :KitchenStaff ;
+    :hasName "Sato" ;
+    :hasExperience 3 .
+
+:ManagerJohnson rdf:type :Manager ;
+    :hasName "Johnson" ;
+    :hasEmail "johnson@sushizen.com" .
+
+# Relationships
+:SushiZenRestaurant :employs :MasterChefTanaka ,
+                                :KitchenStaffSato ,
+                                :ManagerJohnson ;
+                    :hasMenuItem :CaliforniaRoll ,
+                                :SalmonNigiri ,
+                                :DragonRoll ,
+                                :SpicyTunaRoll ;
+                    :hasDiningOption :Dine-In ,
+                                    :Takeout ,
+                                    :Delivery ;
+                    :offersPaymentMethod :CreditCard ,
+                                        :Cash ,
+                                        :DigitalWallet .
+
+:MasterChefTanaka :preparesMenuItem :SalmonNigiri ,
+                                   :DragonRoll ,
+                                   :SpicyTunaRoll .

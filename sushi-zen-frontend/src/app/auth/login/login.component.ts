@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -15,6 +21,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { MenuService } from '../../services/menu.service';
+import { StructuredDataService } from '../../services/structured-data.service';
 
 @Component({
   selector: 'app-login',
@@ -32,21 +39,26 @@ import { MenuService } from '../../services/menu.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   returnUrl: string = '';
   addToCartItemId: string | null = null;
   loading = false;
   error = '';
-
+  structuredData: any;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private cartService: CartService,
-    private menuService: MenuService
-  ) {}
+    private menuService: MenuService,
+    private structuredDataService: StructuredDataService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Initialize structured data for rich results
+    this.initStructuredData();
+  }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -128,5 +140,40 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/menu']);
       },
     });
+  }
+  private initStructuredData(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getWebsiteData(),
+      'website-jsonld'
+    );
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getRestaurantDataFromAPI(),
+      'restaurant-jsonld'
+    );
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getBreadcrumbData([
+        { name: 'Home', url: 'https://sushizen.com' },
+        { name: 'Login', url: 'https://sushizen.com/login' },
+      ]),
+      'breadcrumb-jsonld'
+    );
+  }
+
+  getCurrentUrl(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      return window.location.href;
+    }
+    return 'https://sushizen.com/login';
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.structuredDataService.removeJsonLd('website-jsonld');
+    this.structuredDataService.removeJsonLd('restaurant-jsonld');
+    this.structuredDataService.removeJsonLd('breadcrumb-jsonld');
   }
 }

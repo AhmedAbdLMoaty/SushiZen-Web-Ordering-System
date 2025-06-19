@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -20,6 +26,7 @@ import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { MenuService } from '../../services/menu.service';
+import { StructuredDataService } from '../../services/structured-data.service';
 import { environment } from '../../../environments/environment';
 
 // First, add this helper function at the top of your file (outside the component class)
@@ -50,13 +57,14 @@ function generateUUID() {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   returnUrl: string = '';
   addToCartItemId: string | null = null;
   loading = false;
   error = '';
   hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -66,10 +74,14 @@ export class RegisterComponent implements OnInit {
     private cartService: CartService,
     private menuService: MenuService,
     private snackBar: MatSnackBar,
-    private http: HttpClient // Add this line
+    private http: HttpClient, // Add this line
+    private structuredDataService: StructuredDataService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
+    // Initialize structured data for rich results
+    this.initStructuredData();
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -78,6 +90,7 @@ export class RegisterComponent implements OnInit {
         [Validators.required, Validators.pattern(/^\+?[0-9\s\-\(\)]+$/)],
       ],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
     });
 
     // Get return url from route parameters or default to '/'
@@ -234,6 +247,43 @@ export class RegisterComponent implements OnInit {
           console.error('ERROR! Format rejected:', err);
         },
       });
+  }
+  /**
+   * Initialize structured data for rich results
+   */ private initStructuredData(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getWebsiteData(),
+      'register-website-jsonld'
+    );
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getRestaurantDataFromAPI(),
+      'register-restaurant-jsonld'
+    );
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getBreadcrumbData([
+        { name: 'Home', url: 'https://sushizen.com' },
+        { name: 'Register', url: 'https://sushizen.com/register' },
+      ]),
+      'register-breadcrumb-jsonld'
+    );
+
+    this.structuredDataService.addJsonLdFromAPI(
+      this.structuredDataService.getRegistrationServiceData(),
+      'register-service-jsonld'
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.structuredDataService.removeJsonLd('register-website-jsonld');
+    this.structuredDataService.removeJsonLd('register-restaurant-jsonld');
+    this.structuredDataService.removeJsonLd('register-breadcrumb-jsonld');
+    this.structuredDataService.removeJsonLd('register-service-jsonld');
   }
 
   // Helper method to extract specific error messages from the response

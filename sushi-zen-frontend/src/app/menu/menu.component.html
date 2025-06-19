@@ -1,52 +1,17 @@
 <div
   class="menu-container"
   vocab="https://schema.org/"
-  typeof="Menu"
-  resource="https://sushizen.com/menu"
+  typeof="Restaurant"
+  resource="#sushi-zen-restaurant"
 >
-  <!-- JSON-LD for Menu Items -->
-  <script type="application/ld+json" *ngIf="filteredItems.length > 0">
-    {
-      "@context": ["https://schema.org", "https://sushizen.com/vocab/sushi"],
-      "@type": "Menu",
-      "name": "Sushi Zen Menu",
-      "description": "Discover the artistry of Japanese cuisine",
-      "url": "https://sushizen.com/menu",
-      "hasMenuSection": [
-        {
-          "@type": "MenuSection",
-          "name": "Sushi",
-          "hasMenuItem": [
-            *ngFor="let item of filteredItems.filter(i => i.category === 'sushi'); let isLast = last"
-            {
-              "@type": ["MenuItem", "SushiMenuItem"],
-              "name": "{{ item.itemName }}",
-              "description": "{{ item.itemDescription }}",
-              "image": "{{ item.itemPicture || 'assets/images/default-sushi.jpg' }}",
-              "offers": {
-                "@type": "Offer",
-                "price": "{{ item.itemPrice }}",
-                "priceCurrency": "USD",
-                "availability": "{{ item.available ? 'InStock' : 'OutOfStock' }}"
-              },
-              "nutrition": {
-                "@type": "NutritionInformation",
-                "calories": "{{ item.calories || 'N/A' }}"
-              },
-              "isVegetarian": {{ item.isVegetarian || false }},
-              "hasJapaneseName": "{{ item.japaneseName || '' }}",
-              "isRaw": {{ item.isRaw || false }}
-            }{{ !isLast ? ',' : '' }}
-          ]
-        }
-      ]
-    }
-  </script>
+  <!-- JSON-LD is dynamically injected by the menu component -->
 
   <div class="page-header">
     <div class="header-content">
-      <h1 property="name">Our Menu</h1>
+      <h1 property="name">Sushi Zen - Our Menu</h1>
       <p property="description">Discover the artistry of Japanese cuisine</p>
+      <meta property="servesCuisine" content="Japanese" />
+      <meta property="priceRange" content="$$" />
     </div>
   </div>
 
@@ -73,17 +38,13 @@
         class="chip"
         [class.active]="activeCategory === 'sushi'"
         (click)="filterByCategory('sushi')"
-        typeof="MenuSection"
-        property="hasMenuSection"
       >
-        Sushi
+        <span>Sushi</span>
       </div>
       <div
         class="chip"
         [class.active]="activeCategory === 'rolls'"
         (click)="filterByCategory('rolls')"
-        typeof="MenuSection"
-        property="hasMenuSection"
       >
         Rolls
       </div>
@@ -91,8 +52,6 @@
         class="chip"
         [class.active]="activeCategory === 'sashimi'"
         (click)="filterByCategory('sashimi')"
-        typeof="MenuSection"
-        property="hasMenuSection"
       >
         Sashimi
       </div>
@@ -100,8 +59,6 @@
         class="chip"
         [class.active]="activeCategory === 'bowls'"
         (click)="filterByCategory('bowls')"
-        typeof="MenuSection"
-        property="hasMenuSection"
       >
         Bowls
       </div>
@@ -124,48 +81,62 @@
       Retry
     </button>
   </div>
-  <div class="menu-grid" *ngIf="!loading && !error">
+  <div
+    class="menu-grid"
+    *ngIf="!loading && !error"
+    property="hasMenu"
+    typeof="Menu"
+  >
     <div
       class="menu-item-card"
       *ngFor="let item of filteredItems; let i = index"
       [ngStyle]="{ 'animation-delay': (i % 10) * 0.1 + 's' }"
       [class.unavailable]="!item.available"
-      typeof="MenuItem"
       property="hasMenuItem"
+      typeof="MenuItem"
+      [attr.resource]="'#menu-item-' + item.itemId"
     >
       <div class="item-image">
         <img
+          property="image"
           [src]="item.itemPicture || 'assets/images/default-sushi.jpg'"
           [alt]="item.itemName"
-          property="image"
         />
-        <div class="item-badge" *ngIf="item.popular">Popular</div>
-        <div class="item-badge unavailable" *ngIf="!item.available">
-          Unavailable
+        <div class="image-overlay">
+          <span property="offers" typeof="Offer">
+            <meta property="priceCurrency" content="USD" />
+            <span property="price" [attr.content]="item.itemPrice">{{
+              item.itemPrice | currency
+            }}</span>
+            <meta
+              property="availability"
+              [attr.content]="item.available ? 'InStock' : 'OutOfStock'"
+            />
+          </span>
         </div>
       </div>
-
-      <div class="item-content">
-        <h3 class="item-name" property="name">{{ item.itemName }}</h3>
-        <p class="item-description" property="description">
+      <div class="item-details">
+        <h3 property="name" [attr.content]="item.itemName">
+          {{ item.itemName }}
+        </h3>
+        <p property="description" [attr.content]="item.itemDescription">
           {{ item.itemDescription }}
         </p>
-
-        <div class="item-footer">
-          <span class="item-price" property="offers" typeof="Offer">
-            <span property="price">{{ item.itemPrice | currency }}</span>
-            <meta property="priceCurrency" content="USD" />
-          </span>
-
-          <button
-            class="add-to-cart-btn"
-            [disabled]="!item.available"
-            (click)="addToCart(item)"
-          >
-            <mat-icon>add_shopping_cart</mat-icon>
-            <span class="btn-text">Add</span>
-          </button>
+        <meta property="menuAddOn" [attr.content]="item.category" />
+        <meta property="suitableForDiet" content="Pescatarian" />
+      </div>
+      <div class="item-actions">
+        <div class="item-availability" *ngIf="!item.available">
+          <span>Unavailable</span>
         </div>
+        <button
+          mat-icon-button
+          (click)="addToCart(item)"
+          [disabled]="!item.available"
+          aria-label="Add to cart"
+        >
+          <mat-icon>add_shopping_cart</mat-icon>
+        </button>
       </div>
     </div>
   </div>

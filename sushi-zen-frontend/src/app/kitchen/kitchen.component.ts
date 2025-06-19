@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { OrderService } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { StructuredDataService } from '../services/structured-data.service';
 
 @Component({
   selector: 'app-kitchen',
@@ -28,7 +35,7 @@ import { Router } from '@angular/router';
   templateUrl: './kitchen.component.html',
   styleUrls: ['./kitchen.component.scss'],
 })
-export class KitchenComponent implements OnInit {
+export class KitchenComponent implements OnInit, OnDestroy {
   orders: any[] = [];
   loading = true;
   error = false;
@@ -38,17 +45,29 @@ export class KitchenComponent implements OnInit {
     private orderService: OrderService,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private structuredDataService: StructuredDataService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
-
   ngOnInit(): void {
-    // Check if user is kitchen staff
     if (!this.authService.isKitchenStaff()) {
       this.router.navigate(['/']);
       return;
     }
 
     this.loadOrders();
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.addJsonLdFromAPI(
+        this.structuredDataService.getKitchenData(),
+        'kitchen-jsonld'
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.removeJsonLd('kitchen-jsonld');
+    }
   }
 
   loadOrders(): void {

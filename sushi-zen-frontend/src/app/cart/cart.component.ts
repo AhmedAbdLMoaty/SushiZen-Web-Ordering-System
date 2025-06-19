@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -10,8 +16,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '../services/cart.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../services/menu.service';
-import { AuthService } from '../services/auth.service'; // Add this
-import { OrderService } from '../services/order.service'; // Add this
+import { AuthService } from '../services/auth.service';
+import { OrderService } from '../services/order.service';
+import { StructuredDataService } from '../services/structured-data.service';
 
 @Component({
   selector: 'app-cart',
@@ -28,7 +35,7 @@ import { OrderService } from '../services/order.service'; // Add this
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
   cart: any = null;
   loading = true;
   error = false;
@@ -43,13 +50,26 @@ export class CartComponent implements OnInit {
     private router: Router,
     private menuService: MenuService,
     private snackBar: MatSnackBar,
-    private authService: AuthService, // Add this
-    private orderService: OrderService // Add this
+    private authService: AuthService,
+    private orderService: OrderService,
+    private structuredDataService: StructuredDataService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
-
   ngOnInit(): void {
     this.loadCart();
     this.loadMenuItems();
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.addJsonLdFromAPI(
+        this.structuredDataService.getCartData(this.getCurrentDate()),
+        'cart-jsonld'
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.removeJsonLd('cart-jsonld');
+    }
   }
 
   loadCart(): void {
@@ -230,5 +250,10 @@ export class CartComponent implements OnInit {
         }, 300);
       }, 3000);
     }, 100);
+  }
+
+  // Helper method to get the current date in ISO format
+  getCurrentDate(): string {
+    return new Date().toISOString();
   }
 }

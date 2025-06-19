@@ -22,7 +22,19 @@ public class MenuItem {
 
     private String itemPicture;
 
+    private String category; // e.g., "sushi", "ramen", "drinks"
+
+    private String japaneseName;
+
     private boolean available;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public Long getId() {
         return id;
@@ -72,7 +84,15 @@ public class MenuItem {
         this.itemPicture = itemPicture;
     }
 
-    public boolean getAvailable() {
+    public String getJapaneseName() {
+        return japaneseName;
+    }
+
+    public void setJapaneseName(String japaneseName) {
+        this.japaneseName = japaneseName;
+    }
+
+    public boolean isAvailable() {
         return available;
     }
 

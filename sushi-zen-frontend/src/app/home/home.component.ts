@@ -1,8 +1,15 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
+import { StructuredDataService } from '../services/structured-data.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +18,7 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   specialties = [
     {
       name: 'Signature Rolls',
@@ -84,20 +91,28 @@ export class HomeComponent implements OnInit {
       avatar: 'assets/images/testimonial-3.jpg',
     },
   ];
-
   constructor(
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private structuredDataService: StructuredDataService
   ) {}
-
   ngOnInit(): void {
-    // Preload critical images only in browser
     this.preloadImages();
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.addJsonLdFromAPI(
+        this.structuredDataService.getRestaurantDataFromAPI(),
+        'home-restaurant-jsonld'
+      );
+    }
   }
 
-  // Fixed image preloading with browser check
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.removeJsonLd('home-restaurant-jsonld');
+    }
+  }
+
   preloadImages(): void {
-    // Only run in browser environment, not on server
     if (isPlatformBrowser(this.platformId)) {
       const images = [
         'assets/images/hero-sushi.jpg',

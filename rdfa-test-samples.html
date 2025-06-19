@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>RDFa Test Samples - Sushi Zen</title>
+    </head>
+    <body>
+        <!-- Menu Component RDFa Sample -->
+        <div
+            class="menu-container"
+            vocab="https://schema.org/"
+            typeof="Restaurant"
+            resource="#sushi-zen-restaurant"
+        >
+            <div class="page-header">
+                <div class="header-content">
+                    <h1 property="name">Sushi Zen - Our Menu</h1>
+                    <p property="description">
+                        Discover the artistry of Japanese cuisine
+                    </p>
+                    <meta property="servesCuisine" content="Japanese" />
+                    <meta property="priceRange" content="$$" />
+                </div>
+            </div>
+
+            <div class="menu-grid" property="hasMenu" typeof="Menu">
+                <div
+                    class="menu-item-card"
+                    property="hasMenuItem"
+                    typeof="MenuItem"
+                    resource="#menu-item-1"
+                >
+                    <div class="item-image">
+                        <img
+                            property="image"
+                            src="assets/images/salmon-sashimi.jpg"
+                            alt="Fresh Salmon Sashimi"
+                        />
+                        <div class="image-overlay">
+                            <span property="offers" typeof="Offer">
+                                <meta property="priceCurrency" content="USD" />
+                                <span property="price" content="18.50"
+                                    >$18.50</span
+                                >
+                                <meta
+                                    property="availability"
+                                    content="InStock"
+                                />
+                            </span>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <h3 property="name" content="Fresh Salmon Sashimi">
+                            Fresh Salmon Sashimi
+                        </h3>
+                        <p
+                            property="description"
+                            content="Premium grade salmon, expertly sliced"
+                        >
+                            Premium grade salmon, expertly sliced
+                        </p>
+                        <meta property="menuAddOn" content="sashimi" />
+                        <meta
+                            property="suitableForDiet"
+                            content="Pescatarian"
+                        />
+                    </div>
+                </div>
+
+                <div
+                    class="menu-item-card"
+                    property="hasMenuItem"
+                    typeof="MenuItem"
+                    resource="#menu-item-2"
+                >
+                    <div class="item-image">
+                        <img
+                            property="image"
+                            src="assets/images/california-roll.jpg"
+                            alt="California Roll"
+                        />
+                        <div class="image-overlay">
+                            <span property="offers" typeof="Offer">
+                                <meta property="priceCurrency" content="USD" />
+                                <span property="price" content="12.00"
+                                    >$12.00</span
+                                >
+                                <meta
+                                    property="availability"
+                                    content="InStock"
+                                />
+                            </span>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <h3 property="name" content="California Roll">
+                            California Roll
+                        </h3>
+                        <p
+                            property="description"
+                            content="Crab, avocado, and cucumber wrapped in nori"
+                        >
+                            Crab, avocado, and cucumber wrapped in nori
+                        </p>
+                        <meta property="menuAddOn" content="rolls" />
+                        <meta
+                            property="suitableForDiet"
+                            content="Pescatarian"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Component RDFa Sample -->
+        <div
+            class="home-container"
+            vocab="https://schema.org/"
+            typeof="Restaurant"
+            resource="#sushi-zen-restaurant"
+        >
+            <div style="display: none">
+                <span property="name">Sushi Zen</span>
+                <img
+                    property="image"
+                    src="assets/images/hero-sushi.jpg"
+                    alt="Sushi Zen Restaurant"
+                />
+                <span property="telephone">+1 (555) 123-4567</span>
+                <span property="priceRange">$$</span>
+                <span property="servesCuisine">Japanese</span>
+                <meta property="hasMenu" content="#restaurant-menu" />
+                <meta property="acceptsReservations" content="true" />
+                <div property="address" typeof="PostalAddress">
+                    <span property="streetAddress">123 Sakura Street</span>
+                    <span property="addressLocality">Downtown</span>
+                    <span property="addressRegion">CA</span>
+                    <span property="postalCode">90210</span>
+                    <span property="addressCountry">US</span>
+                </div>
+                <div property="geo" typeof="GeoCoordinates">
+                    <meta property="latitude" content="34.0522" />
+                    <meta property="longitude" content="-118.2437" />
+                </div>
+            </div>
+
+            <div class="featured-card" property="makesOffer" typeof="Offer">
+                <div class="featured-image">
+                    <img
+                        property="image"
+                        src="assets/images/signature-rolls.jpg"
+                        alt="Signature Rolls"
+                    />
+                </div>
+                <div
+                    class="featured-content"
+                    property="itemOffered"
+                    typeof="MenuItem"
+                >
+                    <h3 property="name">Signature Rolls</h3>
+                    <p property="description">
+                        Our chef's special selection of premium rolls
+                    </p>
+                    <meta property="menuAddOn" content="Specialty" />
+                </div>
+            </div>
+
+            <div class="testimonial-card" property="review" typeof="Review">
+                <div
+                    class="testimonial-author"
+                    property="author"
+                    typeof="Person"
+                >
+                    <img
+                        property="image"
+                        src="assets/images/customer1.jpg"
+                        alt="Sarah Johnson"
+                    />
+                    <div class="author-info">
+                        <h4 property="name">Sarah Johnson</h4>
+                        <div
+                            class="rating"
+                            property="reviewRating"
+                            typeof="Rating"
+                        >
+                            <meta property="ratingValue" content="5" />
+                            <meta property="bestRating" content="5" />
+                        </div>
+                    </div>
+                </div>
+                <blockquote>
+                    <p property="reviewBody">
+                        "The best sushi experience I've ever had!"
+                    </p>
+                </blockquote>
+                <meta property="itemReviewed" content="#sushi-zen-restaurant" />
+            </div>
+        </div>
+
+        <!-- Cart Component RDFa Sample -->
+        <div
+            class="cart-container"
+            vocab="https://schema.org/"
+            typeof="ShoppingCart"
+            resource="#user-cart"
+        >
+            <div class="page-header">
+                <div class="header-content">
+                    <h1 property="name">Your Shopping Cart</h1>
+                    <p property="description">
+                        Review your items before checkout
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="cart-items"
+                property="itemListElement"
+                typeof="ItemList"
+            >
+                <div
+                    class="cart-item"
+                    property="itemListElement"
+                    typeof="ListItem"
+                    resource="#cart-item-1"
+                >
+                    <meta property="position" content="1" />
+                    <div class="item-image">
+                        <img
+                            property="image"
+                            src="assets/images/salmon-sashimi.jpg"
+                            alt="Salmon Sashimi"
+                        />
+                    </div>
+                    <div class="item-details" property="item" typeof="Product">
+                        <h3 property="name" content="Fresh Salmon Sashimi">
+                            Fresh Salmon Sashimi
+                        </h3>
+                        <p
+                            class="item-description"
+                            property="description"
+                            content="Premium grade salmon, expertly sliced"
+                        >
+                            Premium grade salmon, expertly sliced
+                        </p>
+                        <div class="item-controls">
+                            <div class="quantity-control">
+                                <span property="orderQuantity" content="2"
+                                    >2</span
+                                >
+                            </div>
+                            <div
+                                class="item-price"
+                                property="offers"
+                                typeof="Offer"
+                            >
+                                <meta property="priceCurrency" content="USD" />
+                                <span property="price" content="37.00"
+                                    >$37.00</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="cart-summary"
+                property="potentialAction"
+                typeof="OrderAction"
+            >
+                <div class="summary-card">
+                    <h2>Order Summary</h2>
+                    <div class="summary-rows">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span property="totalPrice" content="37.00"
+                                >$37.00</span
+                            >
+                        </div>
+                        <meta property="deliveryMethod" content="TakeOut" />
+                        <meta property="paymentMethod" content="CreditCard" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kitchen Component RDFa Sample -->
+        <div
+            class="kitchen-container"
+            vocab="https://schema.org/"
+            typeof="FoodService"
+            resource="#kitchen-orders"
+        >
+            <div class="page-header">
+                <div class="header-content">
+                    <h1 property="name">Kitchen Orders Management</h1>
+                    <p property="description">
+                        Manage and update order statuses
+                    </p>
+                    <meta property="serviceType" content="FoodService" />
+                </div>
+            </div>
+
+            <div
+                class="order-card"
+                property="potentialAction"
+                typeof="OrderAction"
+                resource="#order-123"
+            >
+                <div class="order-meta">
+                    <span property="startTime" content="2025-06-19T14:30:00"
+                        >June 19, 2025 2:30 PM</span
+                    >
+                    <span property="actionStatus" content="InProgress"
+                        >In Progress</span
+                    >
+                </div>
+                <div property="object" typeof="Order">
+                    <div class="order-items">
+                        <h4>Items:</h4>
+                        <ul property="orderedItem" typeof="OrderItem">
+                            <li>
+                                <span property="orderQuantity" content="2"
+                                    >2</span
+                                >
+                                x
+                                <span property="orderedItem" typeof="MenuItem">
+                                    <span
+                                        property="name"
+                                        content="California Roll"
+                                        >California Roll</span
+                                    >
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                        class="customer-info"
+                        property="customer"
+                        typeof="Person"
+                    >
+                        <p>
+                            Customer:
+                            <span property="identifier" content="user123"
+                                >user123</span
+                            >
+                        </p>
+                    </div>
+                    <meta property="orderStatus" content="InProgress" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

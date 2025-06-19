@@ -25,23 +25,17 @@
     <link rel="preload" href="assets/images/sashimi.jpg" as="image" />
     <link rel="preload" href="assets/images/zen-platter.jpg" as="image" />
 
-    <!-- JSON-LD Structured Data for Restaurant -->
+    <!-- JSON-LD structured data is now dynamically injected via app component -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Restaurant",
-        "@id": "https://sushizen.com",
         "name": "Sushi Zen",
-        "alternateName": "寿司禅",
-        "image": [
-          "https://sushizen.com/assets/images/hero-sushi.jpg",
-          "https://sushizen.com/assets/images/chef.jpg",
-          "https://sushizen.com/assets/images/signature-rolls.jpg"
-        ],
-        "description": "Experience the art of authentic Japanese cuisine with Master Chef Tanaka's authentic flavors and modern presentation.",
+        "description": "Authentic Japanese cuisine with modern flair",
+        "url": "https://sushizen.com",
         "telephone": "+1 (555) 123-4567",
         "priceRange": "$$",
-        "servesCuisine": ["Japanese", "Sushi", "Sashimi"],
+        "servesCuisine": "Japanese",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "123 Sakura Street",
@@ -49,71 +43,7 @@
           "addressRegion": "CA",
           "postalCode": "90210",
           "addressCountry": "US"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": "34.0522",
-          "longitude": "-118.2437"
-        },
-        "url": "https://sushizen.com",
-        "hasMenu": {
-          "@type": "Menu",
-          "hasMenuSection": [
-            {
-              "@type": "MenuSection",
-              "name": "Signature Rolls",
-              "description": "Our chef's special creations",
-              "image": "https://sushizen.com/assets/images/signature-rolls.jpg"
-            },
-            {
-              "@type": "MenuSection",
-              "name": "Fresh Sashimi",
-              "description": "Premium cut fish served fresh daily",
-              "image": "https://sushizen.com/assets/images/sashimi.jpg"
-            },
-            {
-              "@type": "MenuSection",
-              "name": "Zen Platter",
-              "description": "A curated selection of our finest offerings",
-              "image": "https://sushizen.com/assets/images/zen-platter.jpg"
-            }
-          ]
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "reviewCount": "127"
-        },
-        "review": [
-          {
-            "@type": "Review",
-            "reviewRating": {
-              "@type": "Rating",
-              "ratingValue": "5"
-            },
-            "reviewBody": "Absolutely incredible! The attention to detail and freshness of ingredients is unmatched.",
-            "author": {
-              "@type": "Person",
-              "name": "Sarah Johnson"
-            }
-          }
-        ]
-      }
-    </script>
-
-    <!-- JSON-LD for Organization -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Sushi Zen",
-        "url": "https://sushizen.com",
-        "logo": "https://sushizen.com/assets/images/logo.png",
-        "sameAs": [
-          "https://www.facebook.com/sushizen",
-          "https://www.instagram.com/sushizen",
-          "https://twitter.com/sushizen"
-        ]
+        }
       }
     </script>
   </head>

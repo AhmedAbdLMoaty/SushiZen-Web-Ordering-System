@@ -1,8 +1,14 @@
-<div class="kitchen-container">
+<div
+  class="kitchen-container"
+  vocab="https://schema.org/"
+  typeof="FoodService"
+  resource="#kitchen-orders"
+>
   <div class="page-header">
     <div class="header-content">
-      <h1>Kitchen Orders</h1>
-      <p>Manage and update order statuses</p>
+      <h1 property="name">Kitchen Orders Management</h1>
+      <p property="description">Manage and update order statuses</p>
+      <meta property="serviceType" content="FoodService" />
     </div>
   </div>
 
@@ -25,58 +31,65 @@
       <h3>No orders to prepare</h3>
       <p>You're all caught up!</p>
     </div>
-
     <div *ngIf="orders.length > 0" class="orders-grid">
       <mat-card
         *ngFor="let order of orders"
         class="order-card"
         [ngClass]="getStatusClass(order.status)"
+        property="potentialAction"
+        typeof="OrderAction"
+        [attr.resource]="'#order-' + order.orderId"
       >
         <mat-card-header>
-          <mat-card-title>Order #{{ order.orderId }}</mat-card-title>
+          <mat-card-title property="actionStatus" [attr.content]="order.status"
+            >Order #{{ order.orderId }}</mat-card-title
+          >
           <mat-card-subtitle>
             <div class="order-meta">
-              <span>{{ order.createdAt | date : "short" }}</span>
+              <span property="startTime" [attr.content]="order.createdAt">{{
+                order.createdAt | date : "short"
+              }}</span>
               <span
                 class="status-badge"
                 [ngClass]="getStatusClass(order.status)"
+                property="actionStatus"
+                [attr.content]="order.status"
                 >{{ order.status }}</span
               >
             </div>
           </mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content property="object" typeof="Order">
           <div class="order-items">
             <h4>Items:</h4>
-            <ul>
+            <ul property="orderedItem" typeof="OrderItem">
               <li *ngFor="let item of order.items">
-                {{ item.quantity }} x {{ item.itemName || item.itemId }}
+                <span property="orderQuantity" [attr.content]="item.quantity">{{
+                  item.quantity
+                }}</span>
+                x
+                <span property="orderedItem" typeof="MenuItem">
+                  <span
+                    property="name"
+                    [attr.content]="item.itemName || item.itemId"
+                    >{{ item.itemName || item.itemId }}</span
+                  >
+                </span>
               </li>
             </ul>
           </div>
 
-          <div class="customer-info">
+          <div class="customer-info" property="customer" typeof="Person">
             <p>
-              <strong>Customer:</strong> {{ order.userName || order.userId }}
+              Customer:
+              <span property="identifier" [attr.content]="order.userId">{{
+                order.userId
+              }}</span>
             </p>
-            <p><strong>Total:</strong> {{ order.totalPrice | currency }}</p>
           </div>
+          <meta property="orderStatus" [attr.content]="order.status" />
         </mat-card-content>
-
-        <mat-card-actions align="end">
-          <mat-form-field appearance="outline" class="status-select">
-            <mat-label>Status</mat-label>
-            <mat-select
-              [(ngModel)]="order.status"
-              (selectionChange)="updateOrderStatus(order.orderId, order.status)"
-            >
-              <mat-option *ngFor="let status of orderStatuses" [value]="status">
-                {{ status }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-card-actions>
       </mat-card>
     </div>
   </div>

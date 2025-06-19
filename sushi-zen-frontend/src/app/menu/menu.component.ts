@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +15,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MenuService } from '../services/menu.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
+import { StructuredDataService } from '../services/structured-data.service';
+
+interface MenuItem {
+  itemId: number;
+  itemName: string;
+  itemDescription: string;
+  itemPrice: number;
+  itemPicture?: string;
+  category: string;
+  available: boolean;
+}
 
 @Component({
   selector: 'app-menu',
@@ -24,27 +41,41 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
 })
-export class MenuComponent implements OnInit {
-  menuItems: any[] = [];
-  filteredItems: any[] = [];
-  searchQuery: string = '';
-  activeCategory: string = 'all';
+export class MenuComponent implements OnInit, OnDestroy {
+  menuItems: MenuItem[] = [];
+  filteredItems: MenuItem[] = [];
+  searchQuery = '';
+  activeCategory = 'all';
   loading = true;
   error = false;
-
   constructor(
     private menuService: MenuService,
     private cartService: CartService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private structuredDataService: StructuredDataService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
     this.loadMenuItems();
+
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.addJsonLdFromAPI(
+        this.structuredDataService.getMenuDataFromAPI(),
+        'menu-jsonld'
+      );
+    }
   }
 
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.structuredDataService.removeJsonLd('menu-jsonld');
+    }
+  }
   loadMenuItems(): void {
     this.loading = true;
+
     this.menuService.getAllMenuItems().subscribe({
       next: (items) => {
         this.menuItems = items;

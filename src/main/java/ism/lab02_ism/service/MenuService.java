@@ -85,7 +85,7 @@ public class MenuService {
             }
         }
 
-        dto.setAvailable(menuItem.getAvailable());
+        dto.setAvailable(menuItem.isAvailable());
         return dto;
     }
 
